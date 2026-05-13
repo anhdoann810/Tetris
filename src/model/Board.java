@@ -63,14 +63,14 @@ public class Board {
                     for (int c = 0; c < COLS; c++) {
                         grid[shiftR][c] = grid[shiftR - 1][c];
                     }
-
-                    for (int c = 0 ; c < COLS; c++) {
+                }
+                
+                for (int c = 0 ; c < COLS; c++) {
                         grid[0][c] = null;
                     }
-
-                    r++;
-                }
             }
+
+            r++;
         }
 
         return linesCleared;
