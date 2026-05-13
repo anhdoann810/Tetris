@@ -67,10 +67,10 @@ public class Board {
                 
                 for (int c = 0 ; c < COLS; c++) {
                         grid[0][c] = null;
-                    }
-            }
+                }
 
-            r++;
+                r++;
+            }
         }
 
         return linesCleared;
