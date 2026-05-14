@@ -1,7 +1,11 @@
 package view;
 
+<<<<<<< HEAD
 import javax.swing.*;
+=======
+>>>>>>> 543c8f6a3ec00c01e2cc0eb6f257911ade87b943
 import java.awt.*;
+import javax.swing.*;
 
 public class HelpPanel extends JPanel {
 

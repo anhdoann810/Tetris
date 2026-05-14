@@ -21,11 +21,11 @@ public class Board {
             int newX = cell.getx() + dx;
             int newY = cell.gety() + dy;
 
-            if (newX < 0 || newX > COLS || newY >= ROWS) {
+            if (newX < 0 || newX >= COLS || newY >= ROWS) {
                 return false;
             }
 
-            if (newY >= 0 && grid[newX][newY] != null) {
+            if (newY >= 0 && grid[newY][newX] != null) {
                 return false;
             }
         }
