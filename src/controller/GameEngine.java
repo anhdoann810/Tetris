@@ -49,14 +49,14 @@ public class GameEngine {
     }
 
     private void movePieceDown() {
-    if (board.isValidBlock(currentPiece, 0, 1)) {
+        if (board.isValidBlock(currentPiece, 0, 1)) {
         currentPiece.move(0, 1);
-    } else {
+        } else {
         lockCurrentPieceAndContinue();
+        }
     }
-}
 
-private void lockCurrentPieceAndContinue() {
+    private void lockCurrentPieceAndContinue() {
     board.lockPiece(currentPiece);
     int linesCleared = board.clearLines();
     score += calculateScore(linesCleared);
@@ -122,38 +122,38 @@ public void rotateCurrentPiece() {
     }
 }
 
-public void togglePause() {
+    public void togglePause() {
     if (isGameOver) return;
     isPaused = !isPaused;
-}
-
-public void start() {
-    if (!timer.isRunning()) {
-        timer.start();
     }
-}
 
-public void stop() {
-    timer.stop();
-}
+    public void start() {
+        if (!timer.isRunning()) {
+            timer.start();
+        }
+    }
 
-public Board getBoard() {
-    return board;
-}
+    public void stop() {
+        timer.stop();
+    }
 
-public Tetromino getCurrentPiece() {
-    return currentPiece;
-}
+    public Board getBoard() {
+        return board;
+    }
 
-public int getScore() {
-    return score;
-}
+    public Tetromino getCurrentPiece() {
+        return currentPiece;
+    }
 
-public boolean isGameOver() {
-    return isGameOver;
-}
+    public int getScore() {
+        return score;
+    }
 
-public boolean isPaused() {
-    return isPaused;
-}
+    public boolean isGameOver() {
+        return isGameOver;
+    }
+
+    public boolean isPaused() {
+        return isPaused;
+    }
 }
