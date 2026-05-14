@@ -62,65 +62,65 @@ public class GameEngine {
     score += calculateScore(linesCleared);
 
     spawnNewPiece();
-}
-
-private int calculateScore(int linesCleared) {
-    switch (linesCleared) {
-        case 1: return 100;
-        case 2: return 300;
-        case 3: return 500;
-        case 4: return 800;
-        default: return 0;
-    }
-}
-
-public void moveLeft() {
-    if (!isGameOver && !isPaused && currentPiece != null && board.isValidBlock(currentPiece, -1, 0)) {
-        currentPiece.move(-1, 0);
-    }
-}
-
-public void moveRight() {
-    if (!isGameOver && !isPaused && currentPiece != null && board.isValidBlock(currentPiece, 1, 0)) {
-        currentPiece.move(1, 0);
-    }
-}
-
-public void softDrop() {
-    if (!isGameOver && !isPaused && currentPiece != null) {
-        movePieceDown();
-    }
-}
-
-public void hardDrop() {
-    if (isGameOver || isPaused || currentPiece == null) return;
-
-    while (board.isValidBlock(currentPiece, 0, 1)) {
-        currentPiece.move(0, 1);
-    }
-    lockCurrentPieceAndContinue();
-}
-
-public void rotateCurrentPiece() {
-    if (isGameOver || isPaused || currentPiece == null) return;
-
-    Cell[] cells = currentPiece.getCells();
-    int[] oldX = new int[cells.length];
-    int[] oldY = new int[cells.length];
-    for (int i = 0; i < cells.length; i++) {
-        oldX[i] = cells[i].getx();
-        oldY[i] = cells[i].gety();
     }
 
-    currentPiece.rotate();
-
-    if (!board.isValidBlock(currentPiece, 0, 0)) {
-        for (int i = 0; i < cells.length; i++) {
-            cells[i].setx(oldX[i]);
-            cells[i].sety(oldY[i]);
+    private int calculateScore(int linesCleared) {
+        switch (linesCleared) {
+            case 1: return 100;
+            case 2: return 300;
+            case 3: return 500;
+            case 4: return 800;
+            default: return 0;
         }
     }
-}
+
+    public void moveLeft() {
+        if (!isGameOver && !isPaused && currentPiece != null && board.isValidBlock(currentPiece, -1, 0)) {
+            currentPiece.move(-1, 0);
+        }
+    }
+
+    public void moveRight() {
+        if (!isGameOver && !isPaused && currentPiece != null && board.isValidBlock(currentPiece, 1, 0)) {
+            currentPiece.move(1, 0);
+        }
+    }
+
+    public void softDrop() {
+        if (!isGameOver && !isPaused && currentPiece != null) {
+            movePieceDown();
+        }
+    }
+
+    public void hardDrop() {
+        if (isGameOver || isPaused || currentPiece == null) return;
+
+        while (board.isValidBlock(currentPiece, 0, 1)) {
+            currentPiece.move(0, 1);
+        }
+        lockCurrentPieceAndContinue();
+    }
+
+    public void rotateCurrentPiece() {
+        if (isGameOver || isPaused || currentPiece == null) return;
+
+        Cell[] cells = currentPiece.getCells();
+        int[] oldX = new int[cells.length];
+        int[] oldY = new int[cells.length];
+        for (int i = 0; i < cells.length; i++) {
+            oldX[i] = cells[i].getx();
+            oldY[i] = cells[i].gety();
+        }
+
+        currentPiece.rotate();
+
+        if (!board.isValidBlock(currentPiece, 0, 0)) {
+            for (int i = 0; i < cells.length; i++) {
+                cells[i].setx(oldX[i]);
+                cells[i].sety(oldY[i]);
+            }
+        }
+    }
 
     public void togglePause() {
     if (isGameOver) return;
