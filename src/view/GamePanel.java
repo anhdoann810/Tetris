@@ -106,6 +106,29 @@ public class GamePanel extends JPanel {
         drawGrid(g);
         drawLockedBlocks(g);
         drawActivePiece(g);
+
+        if (engine != null && engine.isGameOver()) {
+            drawGameOverMessage(g);
+        }
+    }
+
+    private void drawGameOverMessage(Graphics g) {
+        g.setColor(new Color(0, 0, 0, 150));
+        g.fillRect(0, 0, getWidth(), getHeight());
+
+        g.setColor(Color.WHITE);
+        g.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 30));
+        String msg = "GAME OVER";
+        java.awt.FontMetrics fm = g.getFontMetrics();
+        int msgWidth = fm.stringWidth(msg);
+        int msgHeight = fm.getAscent();
+
+        g.drawString(msg, (getWidth() - msgWidth) / 2, getHeight() / 2);
+
+        g.setFont(new java.awt.Font("Arial", java.awt.Font.PLAIN, 15));
+        String subMsg = "Press ESC to Menu";
+        int subMsgWidth = g.getFontMetrics().stringWidth(subMsg);
+        g.drawString(subMsg, (getWidth() - subMsgWidth) / 2, (getHeight() / 2) + msgHeight + 10);
     }
 
     //helper methods

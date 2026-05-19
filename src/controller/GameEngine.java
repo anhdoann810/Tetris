@@ -67,6 +67,8 @@ public class GameEngine {
         if (!board.isValidBlock(currentPiece, 0, 0)) {
             isGameOver = true;
             timer.stop();
+            // Call notifyView one last time before stopping completely
+            notifyView();
         }
     }
 
