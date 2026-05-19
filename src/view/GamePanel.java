@@ -3,6 +3,13 @@ import model.Board;
 import model.Tetromino;
 import model.Cell;
 import javax.swing.JPanel;
+import javax.swing.ActionMap;
+import javax.swing.InputMap;
+import javax.swing.KeyStroke;
+import javax.swing.AbstractAction;
+import java.awt.event.ActionEvent;
+import java.awt.CardLayout;
+import javax.swing.JOptionPane;
 import java.awt.Color;
 import java.awt.Dimension;  
 import java.awt.Graphics;
@@ -11,6 +18,9 @@ public class GamePanel extends JPanel {
     private final int CELL_SIZE = 30;
     private Board gameBoard;
     private Tetromino currentPiece;
+    private controller.GameEngine engine;
+    private JPanel parentContainer;
+    private CardLayout layout;
     
     public GamePanel(Board gameBoard) {
         this.gameBoard = gameBoard;
@@ -20,6 +30,73 @@ public class GamePanel extends JPanel {
 
         this.setPreferredSize(new Dimension(panelWidth, panelHeight));
         this.setBackground(Color.BLACK);
+        
+        setupKeyBindings();
+    }
+
+    public void setEngineAndRouting(controller.GameEngine engine, JPanel parentContainer, CardLayout layout) {
+        this.engine = engine;
+        this.parentContainer = parentContainer;
+        this.layout = layout;
+    }
+
+    private void setupKeyBindings() {
+        InputMap im = this.getInputMap(JPanel.WHEN_IN_FOCUSED_WINDOW);
+        ActionMap am = this.getActionMap();
+
+        im.put(KeyStroke.getKeyStroke("ESCAPE"), "backToMenu");
+        am.put("backToMenu", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (engine != null && parentContainer != null && layout != null) {
+                    engine.togglePause();
+                    int choice = JOptionPane.showConfirmDialog(
+                            GamePanel.this,
+                            "Do you want to return to the Main Menu?",
+                            "Paused",
+                            JOptionPane.YES_NO_OPTION,
+                            JOptionPane.QUESTION_MESSAGE
+                    );
+                    if (choice == JOptionPane.YES_OPTION) {
+                        engine.stop();
+                        layout.show(parentContainer, "Menu");
+                    } else {
+                        engine.togglePause();
+                    }
+                }
+            }
+        });
+
+        // Other keys that should be in the game based on HelpPanel
+        im.put(KeyStroke.getKeyStroke("LEFT"), "left");
+        am.put("left", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) { if (engine != null) engine.moveLeft(); }
+        });
+
+        im.put(KeyStroke.getKeyStroke("RIGHT"), "right");
+        am.put("right", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) { if (engine != null) engine.moveRight(); }
+        });
+
+        im.put(KeyStroke.getKeyStroke("UP"), "up");
+        am.put("up", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) { if (engine != null) engine.rotateCurrentPiece(); }
+        });
+
+        im.put(KeyStroke.getKeyStroke("DOWN"), "down");
+        am.put("down", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) { if (engine != null) engine.softDrop(); }
+        });
+
+        im.put(KeyStroke.getKeyStroke("SPACE"), "space");
+        am.put("space", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) { if (engine != null) engine.hardDrop(); }
+        });
     }
 
     //render

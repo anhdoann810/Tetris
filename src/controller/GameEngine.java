@@ -12,6 +12,8 @@ public class GameEngine {
     private boolean isPaused;
     private Timer timer;
     private Random random;
+    private Runnable viewUpdater;
+
     public GameEngine() {
         board = new Board();
         score = 0;
@@ -19,7 +21,27 @@ public class GameEngine {
         isPaused = false;
         random = new Random();
         timer = new Timer(500, e -> gameLoop());
+        // timer.start() removed from constructor
+    }
+
+    public void resetGame() {
+        board.clear();
+        score = 0;
+        isGameOver = false;
+        isPaused = false;
+        currentPiece = null;
         timer.start();
+        notifyView();
+    }
+
+    public void setViewUpdater(Runnable updater) {
+        this.viewUpdater = updater;
+    }
+
+    private void notifyView() {
+        if (viewUpdater != null) {
+            viewUpdater.run();
+        }
     }
 
     private void gameLoop() {
@@ -30,6 +52,7 @@ public class GameEngine {
         } else {
             movePieceDown();
         }
+        notifyView();
     }
 
     private void spawnNewPiece() {
@@ -46,6 +69,7 @@ public class GameEngine {
             isGameOver = true;
             timer.stop();
         }
+        notifyView();
     }
 
     private void movePieceDown() {
@@ -77,18 +101,21 @@ public class GameEngine {
     public void moveLeft() {
         if (!isGameOver && !isPaused && currentPiece != null && board.isValidBlock(currentPiece, -1, 0)) {
             currentPiece.move(-1, 0);
+            notifyView();
         }
     }
 
     public void moveRight() {
         if (!isGameOver && !isPaused && currentPiece != null && board.isValidBlock(currentPiece, 1, 0)) {
             currentPiece.move(1, 0);
+            notifyView();
         }
     }
 
     public void softDrop() {
         if (!isGameOver && !isPaused && currentPiece != null) {
             movePieceDown();
+            notifyView();
         }
     }
 
@@ -99,6 +126,7 @@ public class GameEngine {
             currentPiece.move(0, 1);
         }
         lockCurrentPieceAndContinue();
+        notifyView();
     }
 
     public void rotateCurrentPiece() {
@@ -120,6 +148,7 @@ public class GameEngine {
                 cells[i].sety(oldY[i]);
             }
         }
+        notifyView();
     }
 
     public void togglePause() {
