@@ -4,9 +4,6 @@ import javax.swing.*;
 import java.awt.CardLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import view.GamePanel;
-import view.MenuPanel;
-import view.HelpPanel;
 import controller.GameEngine;
 public class MainFrame extends JFrame {
     private CardLayout cardLayout;
@@ -20,7 +17,7 @@ public class MainFrame extends JFrame {
     public MainFrame() {
         this.setTitle("Tetris");
         this.setSize(400, 700);
-        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); // Bắt sự kiện đóng cửa sổ
+        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         this.setResizable(false);
         this.setLocationRelativeTo(null);
 
@@ -35,9 +32,16 @@ public class MainFrame extends JFrame {
         this.contentPanel = new JPanel(this.cardLayout);
 
         this.gameEngine = new GameEngine();
-        this.menuPanel = new MenuPanel(this.contentPanel, this.cardLayout);
+        this.menuPanel = new MenuPanel(this.contentPanel, this.cardLayout, this.gameEngine);
         this.helpPanel = new HelpPanel(this.contentPanel, this.cardLayout);
         this.gamePanel = new GamePanel(this.gameEngine.getBoard());
+        
+        this.gamePanel.setEngineAndRouting(this.gameEngine, this.contentPanel, this.cardLayout);
+
+        this.gameEngine.setViewUpdater(() -> {
+            this.gamePanel.setActivePiece(this.gameEngine.getCurrentPiece());
+            this.gamePanel.refreshBoard();
+        });
 
         this.contentPanel.add(this.menuPanel, "Menu");
         this.contentPanel.add(this.gamePanel, "MainGame");
@@ -60,9 +64,5 @@ public class MainFrame extends JFrame {
         if (choice == JOptionPane.YES_OPTION) {
             System.exit(0);
         }
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new MainFrame());
     }
 }

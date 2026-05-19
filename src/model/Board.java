@@ -12,6 +12,14 @@ public class Board {
         grid = new Color[ROWS][COLS];
     }
 
+    public void clear() {
+        for (int r = 0; r < ROWS; r++) {
+            for (int c = 0; c < COLS; c++) {
+                grid[r][c] = null;
+            }
+        }
+    }
+
     public Color[][] getGrid() {
         return grid;
     }
