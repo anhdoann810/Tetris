@@ -37,4 +37,9 @@ public class StraightShape extends Tetromino {
 
         isVertical = !isVertical;
     }
+
+    @Override
+    public void rotateBack() {
+        rotate();
+    }
 }

@@ -21,17 +21,6 @@ public class GameEngine {
         isPaused = false;
         random = new Random();
         timer = new Timer(500, e -> gameLoop());
-        // timer.start() removed from constructor
-    }
-
-    public void resetGame() {
-        board.clear();
-        score = 0;
-        isGameOver = false;
-        isPaused = false;
-        currentPiece = null;
-        timer.start();
-        notifyView();
     }
 
     public void setViewUpdater(Runnable updater) {
@@ -42,6 +31,16 @@ public class GameEngine {
         if (viewUpdater != null) {
             viewUpdater.run();
         }
+    }
+
+    public void resetGame() {
+        board.clear();
+        score = 0;
+        isGameOver = false;
+        isPaused = false;
+        currentPiece = null;
+        timer.start();
+        notifyView();
     }
 
     private void gameLoop() {
@@ -69,7 +68,6 @@ public class GameEngine {
             isGameOver = true;
             timer.stop();
         }
-        notifyView();
     }
 
     private void movePieceDown() {
@@ -132,21 +130,21 @@ public class GameEngine {
     public void rotateCurrentPiece() {
         if (isGameOver || isPaused || currentPiece == null) return;
 
-        Cell[] cells = currentPiece.getCells();
-        int[] oldX = new int[cells.length];
-        int[] oldY = new int[cells.length];
-        for (int i = 0; i < cells.length; i++) {
-            oldX[i] = cells[i].getx();
-            oldY[i] = cells[i].gety();
-        }
-
         currentPiece.rotate();
 
-        if (!board.isValidBlock(currentPiece, 0, 0)) {
-            for (int i = 0; i < cells.length; i++) {
-                cells[i].setx(oldX[i]);
-                cells[i].sety(oldY[i]);
-            }
+        if (board.isValidBlock(currentPiece, 0, 0)) {
+        } else if (board.isValidBlock(currentPiece, -1, 0)) {
+            currentPiece.move(-1, 0);
+        } else if (board.isValidBlock(currentPiece, 1, 0)) {
+            currentPiece.move(1, 0);
+        } else if (board.isValidBlock(currentPiece, -2, 0)) {
+            currentPiece.move(-2, 0);
+        } else if (board.isValidBlock(currentPiece, 2, 0)) {
+            currentPiece.move(2, 0);
+        } else if (board.isValidBlock(currentPiece, 0, -1)) {
+            currentPiece.move(0, -1);
+        } else {
+            currentPiece.rotateBack();
         }
         notifyView();
     }
