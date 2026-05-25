@@ -7,6 +7,7 @@ public abstract class Tetromino {
     protected Color pieceColor;
 
     public abstract void rotate();
+    public abstract void rotateBack();
 
     public Cell[] getCells() {
         return cells;

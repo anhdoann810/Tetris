@@ -12,6 +12,8 @@ public class GameEngine {
     private boolean isPaused;
     private Timer timer;
     private Random random;
+    private Runnable viewUpdater;
+
     public GameEngine() {
         board = new Board();
         score = 0;
@@ -19,7 +21,26 @@ public class GameEngine {
         isPaused = false;
         random = new Random();
         timer = new Timer(500, e -> gameLoop());
+    }
+
+    public void setViewUpdater(Runnable updater) {
+        this.viewUpdater = updater;
+    }
+
+    private void notifyView() {
+        if (viewUpdater != null) {
+            viewUpdater.run();
+        }
+    }
+
+    public void resetGame() {
+        board.clear();
+        score = 0;
+        isGameOver = false;
+        isPaused = false;
+        currentPiece = null;
         timer.start();
+        notifyView();
     }
 
     private void gameLoop() {
@@ -30,6 +51,7 @@ public class GameEngine {
         } else {
             movePieceDown();
         }
+        notifyView();
     }
 
     private void spawnNewPiece() {
@@ -45,14 +67,16 @@ public class GameEngine {
         if (!board.isValidBlock(currentPiece, 0, 0)) {
             isGameOver = true;
             timer.stop();
+            // Call notifyView one last time before stopping completely
+            notifyView();
         }
     }
 
-        private void movePieceDown() {
+    private void movePieceDown() {
         if (board.isValidBlock(currentPiece, 0, 1)) {
-            currentPiece.move(0, 1);
+        currentPiece.move(0, 1);
         } else {
-            lockCurrentPieceAndContinue();
+        lockCurrentPieceAndContinue();
         }
     }
 
@@ -77,18 +101,21 @@ public class GameEngine {
     public void moveLeft() {
         if (!isGameOver && !isPaused && currentPiece != null && board.isValidBlock(currentPiece, -1, 0)) {
             currentPiece.move(-1, 0);
+            notifyView();
         }
     }
 
     public void moveRight() {
         if (!isGameOver && !isPaused && currentPiece != null && board.isValidBlock(currentPiece, 1, 0)) {
             currentPiece.move(1, 0);
+            notifyView();
         }
     }
 
     public void softDrop() {
         if (!isGameOver && !isPaused && currentPiece != null) {
             movePieceDown();
+            notifyView();
         }
     }
 
@@ -99,27 +126,29 @@ public class GameEngine {
             currentPiece.move(0, 1);
         }
         lockCurrentPieceAndContinue();
+        notifyView();
     }
 
     public void rotateCurrentPiece() {
         if (isGameOver || isPaused || currentPiece == null) return;
 
-        Cell[] cells = currentPiece.getCells();
-        int[] oldX = new int[cells.length];
-        int[] oldY = new int[cells.length];
-        for (int i = 0; i < cells.length; i++) {
-            oldX[i] = cells[i].getx();
-            oldY[i] = cells[i].gety();
-        }
-
         currentPiece.rotate();
 
-        if (!board.isValidBlock(currentPiece, 0, 0)) {
-            for (int i = 0; i < cells.length; i++) {
-                cells[i].setx(oldX[i]);
-                cells[i].sety(oldY[i]);
-            }
+        if (board.isValidBlock(currentPiece, 0, 0)) {
+        } else if (board.isValidBlock(currentPiece, -1, 0)) {
+            currentPiece.move(-1, 0);
+        } else if (board.isValidBlock(currentPiece, 1, 0)) {
+            currentPiece.move(1, 0);
+        } else if (board.isValidBlock(currentPiece, -2, 0)) {
+            currentPiece.move(-2, 0);
+        } else if (board.isValidBlock(currentPiece, 2, 0)) {
+            currentPiece.move(2, 0);
+        } else if (board.isValidBlock(currentPiece, 0, -1)) {
+            currentPiece.move(0, -1);
+        } else {
+            currentPiece.rotateBack();
         }
+        notifyView();
     }
 
     public void togglePause() {

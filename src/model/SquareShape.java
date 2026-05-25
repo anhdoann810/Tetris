@@ -14,4 +14,7 @@ public class SquareShape extends Tetromino {
 
     @Override
     public void rotate() {};
+
+    @Override
+    public void rotateBack() {};
 }
