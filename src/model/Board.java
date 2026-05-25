@@ -12,6 +12,14 @@ public class Board {
         grid = new Color[ROWS][COLS];
     }
 
+    public void clear() {
+        for (int r = 0; r < ROWS; r++) {
+            for (int c = 0; c < COLS; c++) {
+                grid[r][c] = null;
+            }
+        }
+    }
+
     public Color[][] getGrid() {
         return grid;
     }
@@ -63,13 +71,13 @@ public class Board {
                     for (int c = 0; c < COLS; c++) {
                         grid[shiftR][c] = grid[shiftR - 1][c];
                     }
-
-                    for (int c = 0 ; c < COLS; c++) {
-                        grid[0][c] = null;
-                    }
-
-                    r++;
                 }
+                
+                for (int c = 0 ; c < COLS; c++) {
+                        grid[0][c] = null;
+                }
+
+                r++;
             }
         }
 

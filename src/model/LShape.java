@@ -28,4 +28,21 @@ public class LShape extends Tetromino {
             cell.sety(pivotY + newRelativeY);
         }
     }
+
+    @Override
+    public void rotateBack() {
+        int pivotX = cells[1].getx();
+        int pivotY = cells[1].gety();
+        
+        for (Cell cell : cells) {
+            int relativeX = cell.getx() - pivotX;
+            int relativeY = cell.gety() - pivotY;
+            
+            int newRelativeX = relativeY;
+            int newRelativeY = -relativeX;
+            
+            cell.setx(pivotX + newRelativeX);
+            cell.sety(pivotY + newRelativeY);
+        }
+    }
 }
