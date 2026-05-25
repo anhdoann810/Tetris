@@ -81,11 +81,11 @@ public class GameEngine {
     }
 
     private void lockCurrentPieceAndContinue() {
-    board.lockPiece(currentPiece);
-    int linesCleared = board.clearLines();
-    score += calculateScore(linesCleared);
+        board.lockPiece(currentPiece);
+        int linesCleared = board.clearLines();
+        score += calculateScore(linesCleared);
 
-    spawnNewPiece();
+        spawnNewPiece();
     }
 
     private int calculateScore(int linesCleared) {
@@ -152,8 +152,8 @@ public class GameEngine {
     }
 
     public void togglePause() {
-    if (isGameOver) return;
-    isPaused = !isPaused;
+        if (isGameOver) return;
+        isPaused = !isPaused;
     }
 
     public void start() {

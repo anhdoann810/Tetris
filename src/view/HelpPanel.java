@@ -1,13 +1,17 @@
 package view;
 
+<<<<<<< HEAD
+import javax.swing.*;
+=======
+>>>>>>> 543c8f6a3ec00c01e2cc0eb6f257911ade87b943
 import java.awt.*;
 import javax.swing.*;
 
 public class HelpPanel extends JPanel {
 
     public HelpPanel(JPanel parentContainer, CardLayout layout) {
-        setLayout(new BorderLayout(20, 20)); 
-        setBackground(Color.BLUE); 
+        setLayout(new BorderLayout(20, 20));
+        setBackground(Color.BLUE);
 
         setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
 
@@ -31,7 +35,7 @@ public class HelpPanel extends JPanel {
         JButton backButton = new JButton("BACK TO MENU");
         backButton.setFont(new Font("Arial", Font.BOLD, 16));
         backButton.setFocusPainted(false);
-        
+
         backButton.addActionListener(e -> layout.show(parentContainer, "Menu"));
 
         add(title, BorderLayout.NORTH);
