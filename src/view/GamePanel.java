@@ -107,6 +107,9 @@ public class GamePanel extends JPanel {
         drawLockedBlocks(g);
         drawActivePiece(g);
 
+        // Add score drawing
+        drawScore(g);
+
         if (engine != null && engine.isGameOver()) {
             drawGameOverMessage(g);
         }
@@ -182,6 +185,18 @@ public class GamePanel extends JPanel {
         }
     }
 
+    // Method to display score
+    private void drawScore(Graphics g) {
+        if (engine != null) {
+            g.setColor(Color.WHITE);
+            g.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 20));
+
+            String scoreText = "Score: " + engine.getScore();
+
+
+            g.drawString(scoreText, 10, 25);
+        }
+    }
     //interface for controller
     public void setActivePiece(Tetromino piece) {
         //updates reference to the falling piece
