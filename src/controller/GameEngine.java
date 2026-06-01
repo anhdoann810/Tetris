@@ -55,13 +55,21 @@ public class GameEngine {
     }
 
     private void spawnNewPiece() {
-        int shapeType = random.nextInt(3);
+        int shapeType = random.nextInt(7);
         if (shapeType == 0) {
             currentPiece = new StraightShape(Board.COLS / 2, -1);
         } else if (shapeType == 1) {
             currentPiece = new SquareShape(Board.COLS / 2, -1);
         } else if (shapeType == 2) {
             currentPiece = new LShape(Board.COLS / 2, -1);
+        } else if (shapeType == 3) {
+            currentPiece = new JShape(Board.COLS / 2, -1);
+        } else if (shapeType == 4) {
+            currentPiece = new TShape(Board.COLS / 2, -1);
+        } else if (shapeType == 5) {
+            currentPiece = new SShape(Board.COLS / 2, -1);
+        } else if (shapeType == 6) {
+            currentPiece = new ZShape(Board.COLS / 2, -1);
         }
 
         if (!board.isValidBlock(currentPiece, 0, 0)) {
