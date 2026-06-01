@@ -1,7 +1,5 @@
 package view;
 
-import javax.swing.*;
-
 import java.awt.*;
 import javax.swing.*;
 
@@ -24,6 +22,7 @@ public class HelpPanel extends JPanel {
                         + "<b>UP ARROW:</b> Rotate piece clockwise<br><br>"
                         + "<b>DOWN ARROW:</b> Soft Drop (move down faster)<br><br>"
                         + "<b>SPACEBAR:</b> Hard Drop (instant lock)<br><br>"
+                        + "<b>ESC:</b> Exit game<br><br>"
                         + "<br>Clear horizontal lines to score points!<br>"
                         + "The game ends if the pieces reach the top."
                         + "</div></html>",
