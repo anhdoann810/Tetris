@@ -24,11 +24,6 @@ public class GamePanel extends JPanel {
     
     public GamePanel(Board gameBoard) {
         this.gameBoard = gameBoard;
-
-        int panelWidth = Board.COLS * CELL_SIZE;
-        int panelHeight = Board.ROWS * CELL_SIZE;
-
-        this.setPreferredSize(new Dimension(panelWidth, panelHeight));
         this.setBackground(Color.BLACK);
         
         setupKeyBindings();
@@ -185,7 +180,7 @@ public class GamePanel extends JPanel {
         }
     }
 
-    // Method to display score
+    //display score
     private void drawScore(Graphics g) {
         if (engine != null) {
             g.setColor(Color.WHITE);
@@ -193,8 +188,7 @@ public class GamePanel extends JPanel {
 
             String scoreText = "Score: " + engine.getScore();
 
-
-            g.drawString(scoreText, 10, 25);
+            g.drawString(scoreText, 320, 30);
         }
     }
     //interface for controller

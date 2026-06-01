@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.CardLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.Dimension;
 import controller.GameEngine;
 
 public class MainFrame extends JFrame {
@@ -17,10 +18,8 @@ public class MainFrame extends JFrame {
 
     public MainFrame() {
         this.setTitle("Tetris");
-        this.setSize(400, 700);
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         this.setResizable(false);
-        this.setLocationRelativeTo(null);
 
         this.addWindowListener(new WindowAdapter() {
             @Override
@@ -49,8 +48,10 @@ public class MainFrame extends JFrame {
         this.contentPanel.add(this.helpPanel, "Help");
 
         this.add(this.contentPanel);
-
         this.cardLayout.show(this.contentPanel, "Menu");
+        this.contentPanel.setPreferredSize(new Dimension(450, 600));
+        this.pack();
+        this.setLocationRelativeTo(null);
         this.setVisible(true);
     }
 
