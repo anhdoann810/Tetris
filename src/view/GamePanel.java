@@ -21,11 +21,11 @@ public class GamePanel extends JPanel {
     private controller.GameEngine engine;
     private JPanel parentContainer;
     private CardLayout layout;
-    
+
     public GamePanel(Board gameBoard) {
         this.gameBoard = gameBoard;
         this.setBackground(Color.BLACK);
-        
+
         setupKeyBindings();
     }
 
@@ -66,31 +66,41 @@ public class GamePanel extends JPanel {
         im.put(KeyStroke.getKeyStroke("LEFT"), "left");
         am.put("left", new AbstractAction() {
             @Override
-            public void actionPerformed(ActionEvent e) { if (engine != null) engine.moveLeft(); }
+            public void actionPerformed(ActionEvent e) {
+                if (engine != null) engine.moveLeft();
+            }
         });
 
         im.put(KeyStroke.getKeyStroke("RIGHT"), "right");
         am.put("right", new AbstractAction() {
             @Override
-            public void actionPerformed(ActionEvent e) { if (engine != null) engine.moveRight(); }
+            public void actionPerformed(ActionEvent e) {
+                if (engine != null) engine.moveRight();
+            }
         });
 
         im.put(KeyStroke.getKeyStroke("UP"), "up");
         am.put("up", new AbstractAction() {
             @Override
-            public void actionPerformed(ActionEvent e) { if (engine != null) engine.rotateCurrentPiece(); }
+            public void actionPerformed(ActionEvent e) {
+                if (engine != null) engine.rotateCurrentPiece();
+            }
         });
 
         im.put(KeyStroke.getKeyStroke("DOWN"), "down");
         am.put("down", new AbstractAction() {
             @Override
-            public void actionPerformed(ActionEvent e) { if (engine != null) engine.softDrop(); }
+            public void actionPerformed(ActionEvent e) {
+                if (engine != null) engine.softDrop();
+            }
         });
 
         im.put(KeyStroke.getKeyStroke("SPACE"), "space");
         am.put("space", new AbstractAction() {
             @Override
-            public void actionPerformed(ActionEvent e) { if (engine != null) engine.hardDrop(); }
+            public void actionPerformed(ActionEvent e) {
+                if (engine != null) engine.hardDrop();
+            }
         });
     }
 
@@ -105,10 +115,61 @@ public class GamePanel extends JPanel {
         // Add score drawing
         drawScore(g);
 
+        // draw next Piece in queue waiting to be spawn
+        drawNextPieces(g);
+
         if (engine != null && engine.isGameOver()) {
             drawGameOverMessage(g);
         }
     }
+
+    // draw 3 next pieces waited to be spawn
+    private void drawNextPieces(Graphics g) {
+        if (engine == null) return;
+
+        // Get the current queue state from the engine
+        java.util.Queue<Tetromino> queueList = engine.getUpcomingPieces();
+        if (queueList == null) return;
+
+        // starting coordinates for the sidebar
+        int startX = (Board.COLS * CELL_SIZE) + 40;
+        int startY = 80;
+
+        // vertical space between each preview piece
+        int verticalSpacing = (4 * CELL_SIZE) + 20;
+        int currentIndex = 0;
+
+        for (Tetromino piece : queueList) {
+
+
+            int drawY = startY + (currentIndex * verticalSpacing);
+
+            int minX = Integer.MAX_VALUE;
+            int minY = Integer.MAX_VALUE;
+            for (Cell cell : piece.getCells()) {
+                if (cell.getx() < minX) minX = cell.getx();
+                if (cell.gety() < minY) minY = cell.gety();
+            }
+
+            for (Cell cell : piece.getCells()) {
+
+                int relativeX = (cell.getx() - minX) * CELL_SIZE;
+                int relativeY = (cell.gety() - minY) * CELL_SIZE;
+
+                int finalDrawX = startX + relativeX;
+                int finalDrawY = drawY + relativeY;
+
+                g.setColor(cell.getColor());
+                g.fillRect(finalDrawX, finalDrawY, CELL_SIZE, CELL_SIZE);
+
+                g.setColor(Color.DARK_GRAY);
+                g.drawRect(finalDrawX, finalDrawY, CELL_SIZE, CELL_SIZE);
+            }
+
+            currentIndex++;
+        }
+    }
+
 
     private void drawGameOverMessage(Graphics g) {
         g.setColor(new Color(0, 0, 0, 150));
@@ -191,6 +252,7 @@ public class GamePanel extends JPanel {
             g.drawString(scoreText, 320, 30);
         }
     }
+
     //interface for controller
     public void setActivePiece(Tetromino piece) {
         //updates reference to the falling piece
