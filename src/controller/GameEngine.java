@@ -13,6 +13,7 @@ public class GameEngine {
     private Timer timer;
     private Random random;
     private Runnable viewUpdater;
+    private int scoreMultiplier = 1;
 
     public GameEngine() {
         board = new Board();
@@ -97,13 +98,25 @@ public class GameEngine {
     }
 
     private int calculateScore(int linesCleared) {
+        int baseScore = 0;
         switch (linesCleared) {
-            case 1: return 100;
-            case 2: return 300;
-            case 3: return 500;
-            case 4: return 800;
-            default: return 0;
+            case 1:
+                baseScore = 100;
+                break;
+            case 2:
+                baseScore = 300;
+                break;
+            case 3:
+                baseScore = 500;
+                break;
+            case 4:
+                baseScore = 800;
+                break;
+            default:
+                baseScore = 0;
+                break;
         }
+        return baseScore * scoreMultiplier;
     }
 
     public void moveLeft() {
@@ -192,5 +205,10 @@ public class GameEngine {
 
     public boolean isPaused() {
         return isPaused;
+    }
+
+    public void setDifficultyDelay(int ms, int multiplier) {
+        this.timer.setDelay(ms);
+        this.scoreMultiplier = multiplier;
     }
 }
