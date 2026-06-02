@@ -4,7 +4,7 @@ import java.awt.Color;
 
 public class LShape extends Tetromino {
     public LShape(int startX, int startY) {
-        this.pieceColor = Color.BLUE;
+        this.pieceColor = Color.ORANGE;
 
         cells[0] = new Cell(startX, startY, pieceColor);
         cells[1] = new Cell(startX, startY + 1, pieceColor); 
