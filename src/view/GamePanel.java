@@ -111,6 +111,7 @@ public class GamePanel extends JPanel {
         drawGrid(g);
         drawLockedBlocks(g);
         drawActivePiece(g);
+        drawShadowPiece(g);
 
         // Add score drawing
         drawScore(g);
@@ -236,6 +237,26 @@ public class GamePanel extends JPanel {
                 g.fillRect(x, y, CELL_SIZE, CELL_SIZE);
 
                 g.setColor(Color.DARK_GRAY);
+                g.drawRect(x, y, CELL_SIZE, CELL_SIZE);
+            }
+        }
+    }
+
+    private void drawShadowPiece(Graphics g) {
+        if (currentPiece != null) {
+            int dy = 0;
+            while (gameBoard.isValidBlock(currentPiece, 0, dy + 1)) {
+                dy++;
+            }
+
+            for (Cell cell : currentPiece.getCells()) {
+                int x = cell.getx() * CELL_SIZE;
+                int y = (cell.gety() + dy) * CELL_SIZE;
+
+                g.setColor(new Color(cell.getColor().getRed(), cell.getColor().getGreen(), cell.getColor().getBlue(), 100));
+                g.fillRect(x, y, CELL_SIZE, CELL_SIZE);
+
+                g.setColor(new Color(169, 169, 169, 100));
                 g.drawRect(x, y, CELL_SIZE, CELL_SIZE);
             }
         }
