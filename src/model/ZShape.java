@@ -4,7 +4,7 @@ import java.awt.Color;
 
 public class ZShape extends Tetromino {
     public ZShape(int startX, int startY) {
-        this.pieceColor = Color.RED;
+        this.pieceColor = Color.PINK;
 
         cells[0] = new Cell(startX, startY, pieceColor);
         cells[1] = new Cell(startX + 1, startY, pieceColor);

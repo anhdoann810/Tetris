@@ -6,7 +6,7 @@ public class StraightShape extends Tetromino {
     private boolean isVertical = true;
 
     public StraightShape(int startX, int startY) {
-        this.pieceColor = Color.CYAN;
+        this.pieceColor = Color.RED;
 
         cells[0] = new Cell(startX, startY, pieceColor);
         cells[1] = new Cell(startX, startY + 1, pieceColor);
