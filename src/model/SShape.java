@@ -4,7 +4,7 @@ import java.awt.Color;
 
 public class SShape extends Tetromino {
     public SShape(int startX, int startY) {
-        this.pieceColor = Color.GREEN;
+        this.pieceColor = Color.ORANGE;
 
         cells[0] = new Cell(startX + 1, startY, pieceColor);
         cells[1] = new Cell(startX + 2, startY, pieceColor);

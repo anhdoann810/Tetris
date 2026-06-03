@@ -4,7 +4,7 @@ import java.awt.Color;
 
 public class JShape extends Tetromino {
     public JShape(int startX, int startY) {
-        this.pieceColor = Color.BLUE;
+        this.pieceColor = Color.CYAN;
 
         cells[0] = new Cell(startX + 1, startY, pieceColor);
         cells[1] = new Cell(startX + 1, startY + 1, pieceColor);
