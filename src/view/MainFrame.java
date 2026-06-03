@@ -14,6 +14,7 @@ public class MainFrame extends JFrame {
     private MenuPanel menuPanel;
     private GamePanel gamePanel;
     private HelpPanel helpPanel;
+    private DifficultyPanel difficultyPanel;
     private GameEngine gameEngine;
 
     public MainFrame() {
@@ -35,6 +36,7 @@ public class MainFrame extends JFrame {
         this.menuPanel = new MenuPanel(this.contentPanel, this.cardLayout, this.gameEngine);
         this.helpPanel = new HelpPanel(this.contentPanel, this.cardLayout);
         this.gamePanel = new GamePanel(this.gameEngine.getBoard());
+        this.difficultyPanel = new DifficultyPanel(this.contentPanel, this.cardLayout, this.gameEngine);
         
         this.gamePanel.setEngineAndRouting(this.gameEngine, this.contentPanel, this.cardLayout);
 
@@ -46,6 +48,7 @@ public class MainFrame extends JFrame {
         this.contentPanel.add(this.menuPanel, "Menu");
         this.contentPanel.add(this.gamePanel, "MainGame");
         this.contentPanel.add(this.helpPanel, "Help");
+        this.contentPanel.add(this.difficultyPanel, "Difficulty");
 
         this.add(this.contentPanel);
         this.cardLayout.show(this.contentPanel, "Menu");

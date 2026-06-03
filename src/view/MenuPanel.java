@@ -13,7 +13,7 @@ public class MenuPanel extends JPanel {
         title.setForeground(Color.WHITE);
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JButton startButton = new JButton("START GAME");
+        JButton startButton = new JButton("PLAY");
         startButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JButton helpButton = new JButton("HELP");
@@ -25,10 +25,7 @@ public class MenuPanel extends JPanel {
         //ở class Main() phải có code đặt tên class GamePanel là "MainGame" và class HelpPanel là "Help" 
         //để switch UI từ MenuPanel
         startButton.addActionListener(e -> {
-            if (gameEngine != null) {
-                gameEngine.resetGame();
-            }
-            layout.show(parentContainer, "MainGame");
+            layout.show(parentContainer, "Difficulty");
         });
         helpButton.addActionListener(e -> layout.show(parentContainer, "Help"));
         exitButton.addActionListener(e -> System.exit(0));
