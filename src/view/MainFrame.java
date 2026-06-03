@@ -59,6 +59,7 @@ public class MainFrame extends JFrame {
     }
 
     private void confirmAndQuit() {
+        gameEngine.togglePause();
         int choice = JOptionPane.showConfirmDialog(
                 this,
                 "Are you sure you want to quit?",
@@ -68,6 +69,8 @@ public class MainFrame extends JFrame {
         );
         if (choice == JOptionPane.YES_OPTION) {
             System.exit(0);
+        } else {
+            gameEngine.togglePause();
         }
     }
 }
