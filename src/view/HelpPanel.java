@@ -12,7 +12,7 @@ public class HelpPanel extends JPanel {
         setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
 
         JLabel title = new JLabel("HOW TO PLAY", SwingConstants.CENTER);
-        title.setFont(new Font("Futura Black", Font.BOLD, 30));
+        title.setFont(new Font("Futura Black", Font.BOLD, 25));
         title.setForeground(Color.WHITE);
 
         JLabel instructions = new JLabel(
@@ -22,7 +22,7 @@ public class HelpPanel extends JPanel {
                         + "<b>UP ARROW:</b> Rotate piece clockwise<br><br>"
                         + "<b>DOWN ARROW:</b> Soft Drop (move down faster)<br><br>"
                         + "<b>SPACEBAR:</b> Hard Drop (instant lock)<br><br>"
-                        + "<b>ESC:</b> Exit game<br><br>"
+                        + "<b>ESC:</b> Exit game<br>"
                         + "<br>Clear horizontal lines to score points!<br>"
                         + "The game ends if the pieces reach the top."
                         + "</div></html>",
