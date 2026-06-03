@@ -12,7 +12,7 @@ public class HelpPanel extends JPanel {
         setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
 
         JLabel title = new JLabel("HOW TO PLAY", SwingConstants.CENTER);
-        title.setFont(new Font("Futura Black", Font.BOLD, 35));
+        title.setFont(new Font("Futura Black", Font.BOLD, 30));
         title.setForeground(Color.WHITE);
 
         JLabel instructions = new JLabel(
