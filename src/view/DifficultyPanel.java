@@ -55,10 +55,10 @@ public class DifficultyPanel extends JPanel {
                 }
                 gameEngine.resetGame();
             }
-            layout.show(parentContainer, "MainGame");
+            layout.show(parentContainer, Constants.SCREEN_GAME);
         });
 
-        backButton.addActionListener(e -> layout.show(parentContainer, "Menu"));
+        backButton.addActionListener(e -> layout.show(parentContainer, Constants.SCREEN_MENU));
 
         add(Box.createVerticalGlue());
         add(title);

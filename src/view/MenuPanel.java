@@ -4,7 +4,9 @@ import java.awt.*;
 
 public class MenuPanel extends JPanel {
     
-    public MenuPanel(JPanel parentContainer, CardLayout layout, controller.GameEngine gameEngine) {
+    public MenuPanel(JPanel parentContainer, CardLayout layout
+        //, controller.GameEngine gameEngine
+        ) {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBackground(Color.BLUE);
 
@@ -25,9 +27,9 @@ public class MenuPanel extends JPanel {
         //ở class Main() phải có code đặt tên class GamePanel là "MainGame" và class HelpPanel là "Help" 
         //để switch UI từ MenuPanel
         startButton.addActionListener(e -> {
-            layout.show(parentContainer, "Difficulty");
+            layout.show(parentContainer, Constants.SCREEN_DIFFICULTY);
         });
-        helpButton.addActionListener(e -> layout.show(parentContainer, "Help"));
+        helpButton.addActionListener(e -> layout.show(parentContainer, Constants.SCREEN_HELP));
         exitButton.addActionListener(e -> System.exit(0));
 
         add(Box.createVerticalGlue());

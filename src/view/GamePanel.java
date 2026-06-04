@@ -54,7 +54,7 @@ public class GamePanel extends JPanel {
                     );
                     if (choice == JOptionPane.YES_OPTION) {
                         engine.stop();
-                        layout.show(parentContainer, "Menu");
+                        layout.show(parentContainer, Constants.SCREEN_MENU);
                     } else {
                         engine.togglePause();
                     }
@@ -124,6 +124,14 @@ public class GamePanel extends JPanel {
         }
     }
 
+    //reusable
+    private void drawSingleBlock(Graphics g, int x, int y, Color blockColor) {
+        g.setColor(blockColor);
+        g.fillRect(x, y, CELL_SIZE, CELL_SIZE);
+        g.setColor(Color.DARK_GRAY);
+        g.drawRect(x, y, CELL_SIZE, CELL_SIZE);
+    }
+
     // draw 3 next pieces waited to be spawn
     private void drawNextPieces(Graphics g) {
         if (engine == null) return;
@@ -160,11 +168,7 @@ public class GamePanel extends JPanel {
                 int finalDrawX = startX + relativeX;
                 int finalDrawY = drawY + relativeY;
 
-                g.setColor(cell.getColor());
-                g.fillRect(finalDrawX, finalDrawY, CELL_SIZE, CELL_SIZE);
-
-                g.setColor(Color.DARK_GRAY);
-                g.drawRect(finalDrawX, finalDrawY, CELL_SIZE, CELL_SIZE);
+                drawSingleBlock(g, finalDrawX, finalDrawY, cell.getColor());
             }
 
             currentIndex++;
@@ -216,11 +220,7 @@ public class GamePanel extends JPanel {
                     int x = c * CELL_SIZE;
                     int y = r * CELL_SIZE;
 
-                    g.setColor(blockColor);
-                    g.fillRect(x, y, CELL_SIZE, CELL_SIZE);
-
-                    g.setColor(Color.DARK_GRAY);
-                    g.drawRect(x, y, CELL_SIZE, CELL_SIZE);
+                    drawSingleBlock(g, x, y, blockColor);
                 }
             }
         }
@@ -233,11 +233,7 @@ public class GamePanel extends JPanel {
                 int x = cell.getx() * CELL_SIZE;
                 int y = cell.gety() * CELL_SIZE;
 
-                g.setColor(cell.getColor());
-                g.fillRect(x, y, CELL_SIZE, CELL_SIZE);
-
-                g.setColor(Color.DARK_GRAY);
-                g.drawRect(x, y, CELL_SIZE, CELL_SIZE);
+                drawSingleBlock(g, x, y, cell.getColor());
             }
         }
     }
@@ -253,11 +249,7 @@ public class GamePanel extends JPanel {
                 int x = cell.getx() * CELL_SIZE;
                 int y = (cell.gety() + dy) * CELL_SIZE;
 
-                g.setColor(new Color(cell.getColor().getRed(), cell.getColor().getGreen(), cell.getColor().getBlue(), 100));
-                g.fillRect(x, y, CELL_SIZE, CELL_SIZE);
-
-                g.setColor(new Color(169, 169, 169, 100));
-                g.drawRect(x, y, CELL_SIZE, CELL_SIZE);
+                drawSingleBlock(g, x, y, new Color(cell.getColor().getRed(), cell.getColor().getGreen(), cell.getColor().getBlue(), 100));
             }
         }
     }

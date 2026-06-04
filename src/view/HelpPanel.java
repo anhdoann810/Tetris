@@ -33,7 +33,7 @@ public class HelpPanel extends JPanel {
         backButton.setFont(new Font("Arial", Font.BOLD, 16));
         backButton.setFocusPainted(false);
 
-        backButton.addActionListener(e -> layout.show(parentContainer, "Menu"));
+        backButton.addActionListener(e -> layout.show(parentContainer, Constants.SCREEN_MENU));
 
         add(title, BorderLayout.NORTH);
         add(instructions, BorderLayout.CENTER);
