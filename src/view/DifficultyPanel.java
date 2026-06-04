@@ -1,12 +1,25 @@
 package view;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
+import java.io.IOException;
 import controller.GameEngine;
 
 public class DifficultyPanel extends JPanel {
+    private BufferedImage bgImage;
+
     public DifficultyPanel(JPanel parentContainer, CardLayout layout, GameEngine gameEngine) {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        setBackground(Color.BLUE);
+        setOpaque(false);
+
+        try {
+            bgImage = ImageIO.read(getClass().getResource("/view/bg.jpg"));
+        } catch (IOException | IllegalArgumentException e) {
+            e.printStackTrace();
+            setOpaque(true);
+            setBackground(Color.BLUE);
+        }
 
         JLabel title = new JLabel("CHOOSE DIFFICULTY");
         title.setFont(new Font("Futura Black", Font.BOLD, 35));
@@ -18,11 +31,11 @@ public class DifficultyPanel extends JPanel {
         JRadioButton hardButton = new JRadioButton("Hard");
 
         easyButton.setForeground(Color.WHITE);
-        easyButton.setBackground(Color.BLUE);
+        easyButton.setOpaque(false);
         mediumButton.setForeground(Color.WHITE);
-        mediumButton.setBackground(Color.BLUE);
+        mediumButton.setOpaque(false);
         hardButton.setForeground(Color.WHITE);
-        hardButton.setBackground(Color.BLUE);
+        hardButton.setOpaque(false);
 
         mediumButton.setSelected(true);
 
@@ -32,7 +45,7 @@ public class DifficultyPanel extends JPanel {
         difficultyGroup.add(hardButton);
 
         JPanel radioPanel = new JPanel();
-        radioPanel.setBackground(Color.BLUE);
+        radioPanel.setOpaque(false);
         radioPanel.add(easyButton);
         radioPanel.add(mediumButton);
         radioPanel.add(hardButton);
@@ -69,5 +82,13 @@ public class DifficultyPanel extends JPanel {
         add(Box.createRigidArea(new Dimension(0, 15)));
         add(backButton);
         add(Box.createVerticalGlue());
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        if (bgImage != null) {
+            g.drawImage(bgImage, 0, 0, getWidth(), getHeight(), this);
+        }
     }
 }
