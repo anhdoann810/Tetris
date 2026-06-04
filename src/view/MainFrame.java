@@ -57,6 +57,9 @@ public class MainFrame extends JFrame {
         this.pack();
         this.setLocationRelativeTo(null);
         this.setVisible(true);
+
+        // Start background music
+        this.gameEngine.getSoundManager().playBGM("/sounds/bgm.wav");
     }
 
     private void confirmAndQuit() {
