@@ -1,4 +1,5 @@
 package view;
+
 import javax.swing.*;
 import java.awt.*;
 import controller.GameEngine;
@@ -13,44 +14,40 @@ public class DifficultyPanel extends JPanel {
         title.setForeground(Color.WHITE);
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JRadioButton easyButton = new JRadioButton("Easy");
-        JRadioButton mediumButton = new JRadioButton("Medium");
-        JRadioButton hardButton = new JRadioButton("Hard");
+        DefaultListCellRenderer rdr = new DefaultListCellRenderer();
+        rdr.setHorizontalAlignment(SwingConstants.CENTER);
+        rdr.setBackground(Color.BLUE);
+        rdr.setForeground(Color.WHITE);
 
-        easyButton.setForeground(Color.WHITE);
-        easyButton.setBackground(Color.BLUE);
-        mediumButton.setForeground(Color.WHITE);
-        mediumButton.setBackground(Color.BLUE);
-        hardButton.setForeground(Color.WHITE);
-        hardButton.setBackground(Color.BLUE);
+        String[] difficultyLevels = { "Easy", "Medium", "Hard" };
+        JComboBox<String> difficultyComboBox = new JComboBox<>(difficultyLevels);
+        difficultyComboBox.setAlignmentX(Component.CENTER_ALIGNMENT);
+        difficultyComboBox.setFont(new Font("Futura Black", Font.BOLD, 24));
+        difficultyComboBox.setBackground(Color.BLUE);
+        difficultyComboBox.setForeground(Color.WHITE);
+        difficultyComboBox.setSelectedIndex(1);
 
-        mediumButton.setSelected(true);
+        difficultyComboBox.setRenderer(rdr);
 
-        ButtonGroup difficultyGroup = new ButtonGroup();
-        difficultyGroup.add(easyButton);
-        difficultyGroup.add(mediumButton);
-        difficultyGroup.add(hardButton);
-
-        JPanel radioPanel = new JPanel();
-        radioPanel.setBackground(Color.BLUE);
-        radioPanel.add(easyButton);
-        radioPanel.add(mediumButton);
-        radioPanel.add(hardButton);
-        radioPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        Dimension comboSize = new Dimension(150, 40);
+        difficultyComboBox.setPreferredSize(comboSize);
+        difficultyComboBox.setMaximumSize(comboSize);
 
         JButton startButton = new JButton("PLAY NOW");
-        startButton.setAlignmentX(CENTER_ALIGNMENT);
+        startButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JButton backButton = new JButton("BACK");
-        backButton.setAlignmentX(CENTER_ALIGNMENT);
+        backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         startButton.addActionListener(e -> {
             if (gameEngine != null) {
-                if (easyButton.isSelected()) {
+                Object selected = difficultyComboBox.getSelectedItem();
+
+                if ("Easy".equals(selected)) {
                     gameEngine.setDifficultyDelay(800, 1);
-                } else if (mediumButton.isSelected()) {
+                } else if ("Medium".equals(selected)) {
                     gameEngine.setDifficultyDelay(500, 2);
-                } else if (hardButton.isSelected()) {
+                } else if ("Hard".equals(selected)) {
                     gameEngine.setDifficultyDelay(200, 3);
                 }
                 gameEngine.resetGame();
@@ -63,7 +60,7 @@ public class DifficultyPanel extends JPanel {
         add(Box.createVerticalGlue());
         add(title);
         add(Box.createRigidArea(new Dimension(0, 20)));
-        add(radioPanel);
+        add(difficultyComboBox);
         add(Box.createRigidArea(new Dimension(0, 30)));
         add(startButton);
         add(Box.createRigidArea(new Dimension(0, 15)));
