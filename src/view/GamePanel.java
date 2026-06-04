@@ -21,16 +21,11 @@ public class GamePanel extends JPanel {
     private controller.GameEngine engine;
     private JPanel parentContainer;
     private CardLayout layout;
-    
+
     public GamePanel(Board gameBoard) {
         this.gameBoard = gameBoard;
-
-        int panelWidth = Board.COLS * CELL_SIZE;
-        int panelHeight = Board.ROWS * CELL_SIZE;
-
-        this.setPreferredSize(new Dimension(panelWidth, panelHeight));
         this.setBackground(Color.BLACK);
-        
+
         setupKeyBindings();
     }
 
@@ -59,7 +54,7 @@ public class GamePanel extends JPanel {
                     );
                     if (choice == JOptionPane.YES_OPTION) {
                         engine.stop();
-                        layout.show(parentContainer, "Menu");
+                        layout.show(parentContainer, Constants.SCREEN_MENU);
                     } else {
                         engine.togglePause();
                     }
@@ -71,31 +66,41 @@ public class GamePanel extends JPanel {
         im.put(KeyStroke.getKeyStroke("LEFT"), "left");
         am.put("left", new AbstractAction() {
             @Override
-            public void actionPerformed(ActionEvent e) { if (engine != null) engine.moveLeft(); }
+            public void actionPerformed(ActionEvent e) {
+                if (engine != null) engine.moveLeft();
+            }
         });
 
         im.put(KeyStroke.getKeyStroke("RIGHT"), "right");
         am.put("right", new AbstractAction() {
             @Override
-            public void actionPerformed(ActionEvent e) { if (engine != null) engine.moveRight(); }
+            public void actionPerformed(ActionEvent e) {
+                if (engine != null) engine.moveRight();
+            }
         });
 
         im.put(KeyStroke.getKeyStroke("UP"), "up");
         am.put("up", new AbstractAction() {
             @Override
-            public void actionPerformed(ActionEvent e) { if (engine != null) engine.rotateCurrentPiece(); }
+            public void actionPerformed(ActionEvent e) {
+                if (engine != null) engine.rotateCurrentPiece();
+            }
         });
 
         im.put(KeyStroke.getKeyStroke("DOWN"), "down");
         am.put("down", new AbstractAction() {
             @Override
-            public void actionPerformed(ActionEvent e) { if (engine != null) engine.softDrop(); }
+            public void actionPerformed(ActionEvent e) {
+                if (engine != null) engine.softDrop();
+            }
         });
 
         im.put(KeyStroke.getKeyStroke("SPACE"), "space");
         am.put("space", new AbstractAction() {
             @Override
-            public void actionPerformed(ActionEvent e) { if (engine != null) engine.hardDrop(); }
+            public void actionPerformed(ActionEvent e) {
+                if (engine != null) engine.hardDrop();
+            }
         });
     }
 
@@ -106,11 +111,70 @@ public class GamePanel extends JPanel {
         drawGrid(g);
         drawLockedBlocks(g);
         drawActivePiece(g);
+        drawShadowPiece(g);
+
+        // Add score drawing
+        drawScore(g);
+
+        // draw next Piece in queue waiting to be spawn
+        drawNextPieces(g);
 
         if (engine != null && engine.isGameOver()) {
             drawGameOverMessage(g);
         }
     }
+
+    //reusable
+    private void drawSingleBlock(Graphics g, int x, int y, Color blockColor) {
+        g.setColor(blockColor);
+        g.fillRect(x, y, CELL_SIZE, CELL_SIZE);
+        g.setColor(Color.DARK_GRAY);
+        g.drawRect(x, y, CELL_SIZE, CELL_SIZE);
+    }
+
+    // draw 3 next pieces waited to be spawn
+    private void drawNextPieces(Graphics g) {
+        if (engine == null) return;
+
+        // Get the current queue state from the engine
+        java.util.Queue<Tetromino> queueList = engine.getUpcomingPieces();
+        if (queueList == null) return;
+
+        // starting coordinates for the sidebar
+        int startX = (Board.COLS * CELL_SIZE) + 40;
+        int startY = 80;
+
+        // vertical space between each preview piece
+        int verticalSpacing = (4 * CELL_SIZE) + 20;
+        int currentIndex = 0;
+
+        for (Tetromino piece : queueList) {
+
+
+            int drawY = startY + (currentIndex * verticalSpacing);
+
+            int minX = Integer.MAX_VALUE;
+            int minY = Integer.MAX_VALUE;
+            for (Cell cell : piece.getCells()) {
+                if (cell.getx() < minX) minX = cell.getx();
+                if (cell.gety() < minY) minY = cell.gety();
+            }
+
+            for (Cell cell : piece.getCells()) {
+
+                int relativeX = (cell.getx() - minX) * CELL_SIZE;
+                int relativeY = (cell.gety() - minY) * CELL_SIZE;
+
+                int finalDrawX = startX + relativeX;
+                int finalDrawY = drawY + relativeY;
+
+                drawSingleBlock(g, finalDrawX, finalDrawY, cell.getColor());
+            }
+
+            currentIndex++;
+        }
+    }
+
 
     private void drawGameOverMessage(Graphics g) {
         g.setColor(new Color(0, 0, 0, 150));
@@ -156,11 +220,7 @@ public class GamePanel extends JPanel {
                     int x = c * CELL_SIZE;
                     int y = r * CELL_SIZE;
 
-                    g.setColor(blockColor);
-                    g.fillRect(x, y, CELL_SIZE, CELL_SIZE);
-
-                    g.setColor(Color.DARK_GRAY);
-                    g.drawRect(x, y, CELL_SIZE, CELL_SIZE);
+                    drawSingleBlock(g, x, y, blockColor);
                 }
             }
         }
@@ -173,12 +233,36 @@ public class GamePanel extends JPanel {
                 int x = cell.getx() * CELL_SIZE;
                 int y = cell.gety() * CELL_SIZE;
 
-                g.setColor(cell.getColor());
-                g.fillRect(x, y, CELL_SIZE, CELL_SIZE);
-
-                g.setColor(Color.DARK_GRAY);
-                g.drawRect(x, y, CELL_SIZE, CELL_SIZE);
+                drawSingleBlock(g, x, y, cell.getColor());
             }
+        }
+    }
+
+    private void drawShadowPiece(Graphics g) {
+        if (currentPiece != null) {
+            int dy = 0;
+            while (gameBoard.isValidBlock(currentPiece, 0, dy + 1)) {
+                dy++;
+            }
+
+            for (Cell cell : currentPiece.getCells()) {
+                int x = cell.getx() * CELL_SIZE;
+                int y = (cell.gety() + dy) * CELL_SIZE;
+
+                drawSingleBlock(g, x, y, new Color(cell.getColor().getRed(), cell.getColor().getGreen(), cell.getColor().getBlue(), 100));
+            }
+        }
+    }
+
+    //display score
+    private void drawScore(Graphics g) {
+        if (engine != null) {
+            g.setColor(Color.WHITE);
+            g.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 20));
+
+            String scoreText = "Score: " + engine.getScore();
+
+            g.drawString(scoreText, 320, 30);
         }
     }
 

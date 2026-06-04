@@ -1,9 +1,5 @@
 package view;
 
-<<<<<<< HEAD
-import javax.swing.*;
-=======
->>>>>>> 543c8f6a3ec00c01e2cc0eb6f257911ade87b943
 import java.awt.*;
 import javax.swing.*;
 
@@ -16,7 +12,7 @@ public class HelpPanel extends JPanel {
         setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
 
         JLabel title = new JLabel("HOW TO PLAY", SwingConstants.CENTER);
-        title.setFont(new Font("Futura Black", Font.BOLD, 35));
+        title.setFont(new Font("Futura Black", Font.BOLD, 25));
         title.setForeground(Color.WHITE);
 
         JLabel instructions = new JLabel(
@@ -26,6 +22,7 @@ public class HelpPanel extends JPanel {
                         + "<b>UP ARROW:</b> Rotate piece clockwise<br><br>"
                         + "<b>DOWN ARROW:</b> Soft Drop (move down faster)<br><br>"
                         + "<b>SPACEBAR:</b> Hard Drop (instant lock)<br><br>"
+                        + "<b>ESC:</b> Exit game<br>"
                         + "<br>Clear horizontal lines to score points!<br>"
                         + "The game ends if the pieces reach the top."
                         + "</div></html>",
@@ -36,7 +33,7 @@ public class HelpPanel extends JPanel {
         backButton.setFont(new Font("Arial", Font.BOLD, 16));
         backButton.setFocusPainted(false);
 
-        backButton.addActionListener(e -> layout.show(parentContainer, "Menu"));
+        backButton.addActionListener(e -> layout.show(parentContainer, Constants.SCREEN_MENU));
 
         add(title, BorderLayout.NORTH);
         add(instructions, BorderLayout.CENTER);

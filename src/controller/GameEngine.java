@@ -2,7 +2,7 @@ package controller;
 
 import model.*;
 import javax.swing.Timer;
-import java.util.Random;
+import java.util.*;
 
 public class GameEngine {
     private Board board;
@@ -13,6 +13,13 @@ public class GameEngine {
     private Timer timer;
     private Random random;
     private Runnable viewUpdater;
+    private int scoreMultiplier = 1;
+
+
+    //attribute for a queue of 3 next piece
+    private static final int  NEXT_PIECE_COUNT = 3;
+    private Queue<Tetromino> queuePiece = new LinkedList<>();
+
 
     public GameEngine() {
         board = new Board();
@@ -38,7 +45,10 @@ public class GameEngine {
         score = 0;
         isGameOver = false;
         isPaused = false;
-        currentPiece = null;
+        // clear old queue and add new 3 pieces to queue
+        queuePiece.clear();
+        addPieceToQueue();
+        getNewPiece();
         timer.start();
         notifyView();
     }
@@ -55,21 +65,54 @@ public class GameEngine {
     }
 
     private void spawnNewPiece() {
-        int shapeType = random.nextInt(3);
-        if (shapeType == 0) {
-            currentPiece = new StraightShape(Board.COLS / 2, -1);
-        } else if (shapeType == 1) {
-            currentPiece = new SquareShape(Board.COLS / 2, -1);
-        } else if (shapeType == 2) {
-            currentPiece = new LShape(Board.COLS / 2, -1);
-        }
-
+        getNewPiece();
         if (!board.isValidBlock(currentPiece, 0, 0)) {
             isGameOver = true;
             timer.stop();
             // Call notifyView one last time before stopping completely
             notifyView();
         }
+    }
+
+    // new method to do only job: create new Piece
+    private Tetromino createNextPiece()
+    {
+            int shapeType = random.nextInt(7);
+            if (shapeType == 0) {
+                return new StraightShape(Board.COLS / 2, -1);
+            } else if (shapeType == 1) {
+                return new SquareShape(Board.COLS / 2, -1);
+            } else if (shapeType == 2) {
+                return new LShape(Board.COLS / 2, -1);
+            } else if (shapeType == 3) {
+                return new JShape(Board.COLS / 2, -1);
+            } else if (shapeType == 4) {
+                return new TShape(Board.COLS / 2, -1);
+            } else if (shapeType == 5) {
+                return new SShape(Board.COLS / 2, -1);
+            } else {
+                return new ZShape(Board.COLS / 2, -1);
+            }
+    }
+    // fill the queue when needed
+    private void addPieceToQueue()
+    {
+        while(queuePiece.size() < NEXT_PIECE_COUNT)
+        {
+            queuePiece.add(createNextPiece());
+        }
+    }
+
+    // get new piece for currentPiece
+    private void getNewPiece()
+    {
+        currentPiece = queuePiece.remove();
+        addPieceToQueue();
+    }
+
+    public Queue<Tetromino> getUpcomingPieces()
+    {
+        return queuePiece;
     }
 
     private void movePieceDown() {
@@ -89,13 +132,25 @@ public class GameEngine {
     }
 
     private int calculateScore(int linesCleared) {
+        int baseScore = 0;
         switch (linesCleared) {
-            case 1: return 100;
-            case 2: return 300;
-            case 3: return 500;
-            case 4: return 800;
-            default: return 0;
+            case 1:
+                baseScore = 100;
+                break;
+            case 2:
+                baseScore = 300;
+                break;
+            case 3:
+                baseScore = 500;
+                break;
+            case 4:
+                baseScore = 800;
+                break;
+            default:
+                baseScore = 0;
+                break;
         }
+        return baseScore * scoreMultiplier;
     }
 
     public void moveLeft() {
@@ -184,5 +239,10 @@ public class GameEngine {
 
     public boolean isPaused() {
         return isPaused;
+    }
+
+    public void setDifficultyDelay(int ms, int multiplier) {
+        this.timer.setDelay(ms);
+        this.scoreMultiplier = multiplier;
     }
 }

@@ -7,8 +7,8 @@ import java.io.IOException;
 
 public class MenuPanel extends JPanel {
     private BufferedImage bgImage;
-
-    public MenuPanel(JPanel parentContainer, CardLayout layout, controller.GameEngine gameEngine) {
+    
+    public MenuPanel(JPanel parentContainer, CardLayout layout) {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setOpaque(false);
 
@@ -25,7 +25,7 @@ public class MenuPanel extends JPanel {
         title.setForeground(Color.WHITE);
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JButton startButton = new JButton("START GAME");
+        JButton startButton = new JButton("PLAY");
         startButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JButton helpButton = new JButton("HELP");
@@ -35,12 +35,9 @@ public class MenuPanel extends JPanel {
         exitButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         startButton.addActionListener(e -> {
-            if (gameEngine != null) {
-                gameEngine.resetGame();
-            }
-            layout.show(parentContainer, "MainGame");
+            layout.show(parentContainer, Constants.SCREEN_DIFFICULTY);
         });
-        helpButton.addActionListener(e -> layout.show(parentContainer, "Help"));
+        helpButton.addActionListener(e -> layout.show(parentContainer, Constants.SCREEN_HELP));
         exitButton.addActionListener(e -> System.exit(0));
 
         add(Box.createVerticalGlue());
