@@ -1,12 +1,24 @@
 package view;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
+import java.io.IOException;
 
 public class MenuPanel extends JPanel {
-    
+    private BufferedImage bgImage;
+
     public MenuPanel(JPanel parentContainer, CardLayout layout, controller.GameEngine gameEngine) {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        setBackground(Color.BLUE);
+        setOpaque(false);
+
+        try {
+            bgImage = ImageIO.read(getClass().getResource("/view/bg.jpg"));
+        } catch (IOException | IllegalArgumentException e) {
+            e.printStackTrace();
+            setOpaque(true);
+            setBackground(Color.BLUE); 
+        }
 
         JLabel title = new JLabel("TETRIS");
         title.setFont(new Font("Futura Black", Font.BOLD, 50));
@@ -22,8 +34,6 @@ public class MenuPanel extends JPanel {
         JButton exitButton = new JButton("EXIT GAME");
         exitButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        //ở class Main() phải có code đặt tên class GamePanel là "MainGame" và class HelpPanel là "Help" 
-        //để switch UI từ MenuPanel
         startButton.addActionListener(e -> {
             if (gameEngine != null) {
                 gameEngine.resetGame();
@@ -36,7 +46,7 @@ public class MenuPanel extends JPanel {
         add(Box.createVerticalGlue());
 
         add(title);
-        add(Box.createRigidArea(new Dimension(0, 40)));//(width, height)
+        add(Box.createRigidArea(new Dimension(0, 40)));
 
         add(startButton);
         add(Box.createRigidArea(new Dimension(0, 15)));
@@ -47,5 +57,13 @@ public class MenuPanel extends JPanel {
         add(exitButton);
 
         add(Box.createVerticalGlue());
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        if (bgImage != null) {
+            g.drawImage(bgImage, 0, 0, getWidth(), getHeight(), this);
+        }
     }
 }
