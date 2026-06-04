@@ -14,12 +14,11 @@ public class GameEngine {
     private Random random;
     private Runnable viewUpdater;
     private int scoreMultiplier = 1;
+    private SoundController soundManager;
 
-
-    //attribute for a queue of 3 next piece
-    private static final int  NEXT_PIECE_COUNT = 3;
+    // attribute for a queue of 3 next piece
+    private static final int NEXT_PIECE_COUNT = 3;
     private Queue<Tetromino> queuePiece = new LinkedList<>();
-
 
     public GameEngine() {
         board = new Board();
@@ -28,6 +27,7 @@ public class GameEngine {
         isPaused = false;
         random = new Random();
         timer = new Timer(500, e -> gameLoop());
+        soundManager = new SoundController();
     }
 
     public void setViewUpdater(Runnable updater) {
@@ -54,7 +54,8 @@ public class GameEngine {
     }
 
     private void gameLoop() {
-        if (isGameOver || isPaused) return;
+        if (isGameOver || isPaused)
+            return;
 
         if (currentPiece == null) {
             spawnNewPiece();
@@ -69,57 +70,54 @@ public class GameEngine {
         if (!board.isValidBlock(currentPiece, 0, 0)) {
             isGameOver = true;
             timer.stop();
+            soundManager.stopBGM();
             // Call notifyView one last time before stopping completely
             notifyView();
         }
     }
 
     // new method to do only job: create new Piece
-    private Tetromino createNextPiece()
-    {
-            int shapeType = random.nextInt(7);
-            if (shapeType == 0) {
-                return new StraightShape(Board.COLS / 2, -1);
-            } else if (shapeType == 1) {
-                return new SquareShape(Board.COLS / 2, -1);
-            } else if (shapeType == 2) {
-                return new LShape(Board.COLS / 2, -1);
-            } else if (shapeType == 3) {
-                return new JShape(Board.COLS / 2, -1);
-            } else if (shapeType == 4) {
-                return new TShape(Board.COLS / 2, -1);
-            } else if (shapeType == 5) {
-                return new SShape(Board.COLS / 2, -1);
-            } else {
-                return new ZShape(Board.COLS / 2, -1);
-            }
+    private Tetromino createNextPiece() {
+        int shapeType = random.nextInt(7);
+        if (shapeType == 0) {
+            return new StraightShape(Board.COLS / 2, -1);
+        } else if (shapeType == 1) {
+            return new SquareShape(Board.COLS / 2, -1);
+        } else if (shapeType == 2) {
+            return new LShape(Board.COLS / 2, -1);
+        } else if (shapeType == 3) {
+            return new JShape(Board.COLS / 2, -1);
+        } else if (shapeType == 4) {
+            return new TShape(Board.COLS / 2, -1);
+        } else if (shapeType == 5) {
+            return new SShape(Board.COLS / 2, -1);
+        } else {
+            return new ZShape(Board.COLS / 2, -1);
+        }
     }
+
     // fill the queue when needed
-    private void addPieceToQueue()
-    {
-        while(queuePiece.size() < NEXT_PIECE_COUNT)
-        {
+    private void addPieceToQueue() {
+        while (queuePiece.size() < NEXT_PIECE_COUNT) {
             queuePiece.add(createNextPiece());
         }
     }
 
     // get new piece for currentPiece
-    private void getNewPiece()
-    {
+    private void getNewPiece() {
         currentPiece = queuePiece.remove();
         addPieceToQueue();
     }
 
-    public Queue<Tetromino> getUpcomingPieces()
-    {
+    public Queue<Tetromino> getUpcomingPieces() {
         return queuePiece;
     }
 
     private void movePieceDown() {
         if (board.isValidBlock(currentPiece, 0, 1)) {
-        currentPiece.move(0, 1);
+            currentPiece.move(0, 1);
         } else {
-        lockCurrentPieceAndContinue();
+            lockCurrentPieceAndContinue();
         }
     }
 
@@ -127,6 +125,10 @@ public class GameEngine {
         board.lockPiece(currentPiece);
         int linesCleared = board.clearLines();
         score += calculateScore(linesCleared);
+
+        if (linesCleared > 0) {
+            soundManager.playSFX("/sounds/clear.wav");
+        }
 
         spawnNewPiece();
     }
@@ -175,7 +177,8 @@ public class GameEngine {
     }
 
     public void hardDrop() {
-        if (isGameOver || isPaused || currentPiece == null) return;
+        if (isGameOver || isPaused || currentPiece == null)
+            return;
 
         while (board.isValidBlock(currentPiece, 0, 1)) {
             currentPiece.move(0, 1);
@@ -185,7 +188,8 @@ public class GameEngine {
     }
 
     public void rotateCurrentPiece() {
-        if (isGameOver || isPaused || currentPiece == null) return;
+        if (isGameOver || isPaused || currentPiece == null)
+            return;
 
         currentPiece.rotate();
 
@@ -207,7 +211,8 @@ public class GameEngine {
     }
 
     public void togglePause() {
-        if (isGameOver) return;
+        if (isGameOver)
+            return;
         isPaused = !isPaused;
     }
 
@@ -244,5 +249,9 @@ public class GameEngine {
     public void setDifficultyDelay(int ms, int multiplier) {
         this.timer.setDelay(ms);
         this.scoreMultiplier = multiplier;
+    }
+
+    public SoundController getSoundManager() {
+        return soundManager;
     }
 }
