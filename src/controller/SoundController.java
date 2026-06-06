@@ -36,18 +36,6 @@ public class SoundController {
         }
     }
 
-    public void pauseBGM() {
-        if (bgmClip != null && bgmClip.isRunning()) {
-            bgmClip.stop();
-        }
-    }
-
-    public void resumeBGM() {
-        if (bgmClip != null && !bgmClip.isRunning() && !bgmMuted) {
-            bgmClip.loop(Clip.LOOP_CONTINUOUSLY);
-        }
-    }
-
     public void playSFX(String resourcePath) {
         if (sfxMuted)
             return;
@@ -73,10 +61,12 @@ public class SoundController {
 
     public void toggleBGM() {
         bgmMuted = !bgmMuted;
-        if (bgmMuted) {
-            pauseBGM();
-        } else {
-            resumeBGM();
+        if (bgmClip != null) {
+            if (bgmMuted) {
+                bgmClip.stop();
+            } else {
+                bgmClip.loop(Clip.LOOP_CONTINUOUSLY);
+            }
         }
     }
 

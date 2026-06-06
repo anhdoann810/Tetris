@@ -33,12 +33,11 @@ public class MainFrame extends JFrame {
         this.contentPanel = new JPanel(this.cardLayout);
 
         this.gameEngine = new GameEngine();
-        this.menuPanel = new MenuPanel(this.contentPanel, this.cardLayout//, this.gameEngine
-        );
+        this.menuPanel = new MenuPanel(this.contentPanel, this.cardLayout, this.gameEngine);
         this.helpPanel = new HelpPanel(this.contentPanel, this.cardLayout);
         this.gamePanel = new GamePanel(this.gameEngine.getBoard());
         this.difficultyPanel = new DifficultyPanel(this.contentPanel, this.cardLayout, this.gameEngine);
-        
+
         this.gamePanel.setEngineAndRouting(this.gameEngine, this.contentPanel, this.cardLayout);
 
         this.gameEngine.setViewUpdater(() -> {
@@ -69,8 +68,7 @@ public class MainFrame extends JFrame {
                 "Are you sure you want to quit?",
                 "Quit Tetris",
                 JOptionPane.YES_NO_OPTION,
-                JOptionPane.WARNING_MESSAGE
-        );
+                JOptionPane.WARNING_MESSAGE);
         if (choice == JOptionPane.YES_OPTION) {
             System.exit(0);
         } else {
