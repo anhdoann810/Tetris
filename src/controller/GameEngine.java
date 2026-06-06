@@ -16,7 +16,6 @@ public class GameEngine {
     private int scoreMultiplier = 1;
     private SoundController soundManager;
 
-    // attribute for a queue of 3 next piece
     private static final int NEXT_PIECE_COUNT = 3;
     private Queue<Tetromino> queuePiece = new LinkedList<>();
 
@@ -45,7 +44,6 @@ public class GameEngine {
         score = 0;
         isGameOver = false;
         isPaused = false;
-        // clear old queue and add new 3 pieces to queue
         queuePiece.clear();
         addPieceToQueue();
         getNewPiece();

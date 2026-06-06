@@ -1,14 +1,17 @@
 package view;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import java.io.IOException;
+import controller.GameEngine;
+import controller.SoundController;
 
 public class MenuPanel extends JPanel {
     private BufferedImage bgImage;
-    
-    public MenuPanel(JPanel parentContainer, CardLayout layout) {
+
+    public MenuPanel(JPanel parentContainer, CardLayout layout, GameEngine gameEngine) {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setOpaque(false);
 
@@ -17,7 +20,7 @@ public class MenuPanel extends JPanel {
         } catch (IOException | IllegalArgumentException e) {
             e.printStackTrace();
             setOpaque(true);
-            setBackground(Color.BLUE); 
+            setBackground(Color.BLUE);
         }
 
         JLabel title = new JLabel("TETRIS");
@@ -33,6 +36,14 @@ public class MenuPanel extends JPanel {
 
         JButton exitButton = new JButton("EXIT GAME");
         exitButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JButton bgmToggleButton = new JButton("\uD83D\uDD0A BGM");
+        bgmToggleButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        bgmToggleButton.addActionListener(e -> {
+            SoundController sm = gameEngine.getSoundManager();
+            sm.toggleBGM();
+            bgmToggleButton.setText(sm.isBgmMuted() ? "\uD83D\uDD07 BGM" : "\uD83D\uDD0A BGM");
+        });
 
         startButton.addActionListener(e -> {
             layout.show(parentContainer, Constants.SCREEN_DIFFICULTY);
@@ -52,6 +63,9 @@ public class MenuPanel extends JPanel {
         add(Box.createRigidArea(new Dimension(0, 15)));
 
         add(exitButton);
+        add(Box.createRigidArea(new Dimension(0, 15)));
+
+        add(bgmToggleButton);
 
         add(Box.createVerticalGlue());
     }
