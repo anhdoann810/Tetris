@@ -49,6 +49,7 @@ public class GameEngine {
         getNewPiece();
         timer.start();
         notifyView();
+        soundManager.playBGM("/sounds/bgm.wav");
     }
 
     private void gameLoop() {
