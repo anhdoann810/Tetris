@@ -24,6 +24,7 @@ public class GamePanel extends JPanel {
     private JPanel parentContainer;
     private CardLayout layout;
     private JButton bgmToggleButton;
+    private JButton backButton;
 
     public GamePanel(Board gameBoard) {
         this.gameBoard = gameBoard;
@@ -34,6 +35,11 @@ public class GamePanel extends JPanel {
         bgmToggleButton.setBounds(Board.COLS * CELL_SIZE + 20, 500, 120, 35);
         bgmToggleButton.setFocusable(false);
         this.add(bgmToggleButton);
+
+        backButton = new JButton("\u2190 Menu");
+        backButton.setBounds(Board.COLS * CELL_SIZE + 20, 545, 120, 35);
+        backButton.setFocusable(false);
+        this.add(backButton);
 
         setupKeyBindings();
     }
@@ -47,6 +53,22 @@ public class GamePanel extends JPanel {
             SoundController sm = engine.getSoundManager();
             sm.toggleBGM();
             bgmToggleButton.setText(sm.isBgmMuted() ? "\uD83D\uDD07 Music" : "\uD83D\uDD0A Music");
+        });
+
+        backButton.addActionListener(e -> {
+            engine.togglePause();
+            int choice = JOptionPane.showConfirmDialog(
+                    GamePanel.this,
+                    "Do you want to return to the Main Menu?",
+                    "Paused",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE);
+            if (choice == JOptionPane.YES_OPTION) {
+                engine.stop();
+                layout.show(parentContainer, Constants.SCREEN_MENU);
+            } else {
+                engine.togglePause();
+            }
         });
     }
 
