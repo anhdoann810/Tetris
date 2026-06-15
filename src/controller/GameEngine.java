@@ -49,6 +49,7 @@ public class GameEngine {
         getNewPiece();
         timer.start();
         notifyView();
+        soundManager.playBGM("/sounds/bgm.wav");
     }
 
     private void gameLoop() {
@@ -68,7 +69,7 @@ public class GameEngine {
         if (!board.isValidBlock(currentPiece, 0, 0)) {
             isGameOver = true;
             timer.stop();
-            soundManager.stopBGM();
+            //soundManager.stopBGM();
             // Call notifyView one last time before stopping completely
             notifyView();
         }
