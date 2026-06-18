@@ -1,6 +1,7 @@
 package model;
 
 import java.awt.Color;
+import java.util.Arrays;
 
 public class Board {
     public static final int ROWS = 20;
@@ -21,7 +22,11 @@ public class Board {
     }
 
     public Color[][] getGrid() {
-        return grid;
+        Color[][] copy = new Color[ROWS][COLS];
+        for (int r = 0; r < ROWS; r++) {
+            copy[r] = Arrays.copyOf(grid[r], COLS);
+        }
+        return copy;
     }
 
     public boolean isValidBlock(Tetromino piece, int dx, int dy){
