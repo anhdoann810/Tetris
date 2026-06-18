@@ -6,33 +6,29 @@ public class StraightShape extends Tetromino {
     private boolean isVertical = true;
 
     public StraightShape(int startX, int startY) {
-        this.pieceColor = Color.RED;
+        Color color = Color.RED;
 
-        cells[0] = new Cell(startX, startY, pieceColor);
-        cells[1] = new Cell(startX, startY + 1, pieceColor);
-        cells[2] = new Cell(startX, startY + 2, pieceColor);
-        cells[3] = new Cell(startX, startY + 3, pieceColor);
+        initCells(
+            new Cell(startX, startY, color),
+            new Cell(startX, startY + 1, color),
+            new Cell(startX, startY + 2, color),
+            new Cell(startX, startY + 3, color)
+        );
     }
 
     @Override
     public void rotate() {
-        int pivotX = cells[1].getx();
-        int pivotY = cells[1].gety();
+        int pivotX = getCell(1).getx();
+        int pivotY = getCell(1).gety();
 
         if (isVertical){
-            cells[0].setx(pivotX - 1);
-            cells[0].sety(pivotY);
-            cells[2].setx(pivotX + 1);
-            cells[2].sety(pivotY);
-            cells[3].setx(pivotX + 2);
-            cells[3].sety(pivotY);
+            getCell(0).move(pivotX - 1 - getCell(0).getx(), pivotY - getCell(0).gety());
+            getCell(2).move(pivotX + 1 - getCell(2).getx(), pivotY - getCell(2).gety());
+            getCell(3).move(pivotX + 2 - getCell(3).getx(), pivotY - getCell(3).gety());
         } else {
-            cells[0].setx(pivotX);
-            cells[0].sety(pivotY - 1);
-            cells[2].setx(pivotX); 
-            cells[2].sety(pivotY + 1);
-            cells[3].setx(pivotX); 
-            cells[3].sety(pivotY + 2);
+            getCell(0).move(pivotX - getCell(0).getx(), pivotY - 1 - getCell(0).gety());
+            getCell(2).move(pivotX - getCell(2).getx(), pivotY + 1 - getCell(2).gety());
+            getCell(3).move(pivotX - getCell(3).getx(), pivotY + 2 - getCell(3).gety());
         }
 
         isVertical = !isVertical;
