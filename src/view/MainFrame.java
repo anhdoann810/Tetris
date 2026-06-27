@@ -39,6 +39,7 @@ public class MainFrame extends JFrame {
         this.difficultyPanel = new DifficultyPanel(this.contentPanel, this.cardLayout, this.gameEngine);
 
         this.gamePanel.setEngineAndRouting(this.gameEngine, this.contentPanel, this.cardLayout);
+
         this.gameEngine.setViewUpdater(() -> {
             this.gamePanel.setActivePiece(this.gameEngine.getCurrentPiece());
             this.gamePanel.refreshBoard();
