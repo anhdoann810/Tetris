@@ -1,31 +1,25 @@
 package controller;
 
 import model.*;
-import javax.swing.Timer;
 import java.util.*;
 
 public class GameEngine {
-    private Board board;
-    private Tetromino currentPiece;
-    private int score;
-    private boolean isGameOver;
-    private boolean isPaused;
-    private Timer timer;
-    private Random random;
+    private GameState state;
+    private PieceQueue pieceQueue;
+    private PieceMovementController movementController;
+    private ScoreManager scoreManager;
+    private GameLoopController gameLoopController;
+    private final Random random;
     private Runnable viewUpdater;
-    private int scoreMultiplier = 1;
     private SoundController soundManager;
 
-    private static final int NEXT_PIECE_COUNT = 3;
-    private Queue<Tetromino> queuePiece = new LinkedList<>();
-
     public GameEngine() {
-        board = new Board();
-        score = 0;
-        isGameOver = false;
-        isPaused = false;
         random = new Random();
-        timer = new Timer(500, e -> gameLoop());
+        state = new GameState();
+        scoreManager = new ScoreManager();
+        pieceQueue = new PieceQueue(this::createNextPiece);
+        movementController = new PieceMovementController(state, this::lockCurrentPieceAndContinue);
+        gameLoopController = new GameLoopController(this::gameLoop);
         soundManager = new SoundController();
     }
 
@@ -40,42 +34,36 @@ public class GameEngine {
     }
 
     public void resetGame() {
-        board.clear();
-        score = 0;
-        isGameOver = false;
-        isPaused = false;
-        queuePiece.clear();
-        addPieceToQueue();
-        getNewPiece();
-        timer.start();
+        state.reset();
+        pieceQueue.reset();
+        spawnNewPiece();
+        gameLoopController.start();
         notifyView();
         soundManager.playBGM("/sounds/bgm.wav");
     }
 
     private void gameLoop() {
-        if (isGameOver || isPaused)
+        if (state.isGameOver() || state.isPaused())
             return;
 
-        if (currentPiece == null) {
+        if (state.getCurrentPiece() == null) {
             spawnNewPiece();
         } else {
-            movePieceDown();
+            movementController.moveDown();
         }
         notifyView();
     }
 
     private void spawnNewPiece() {
-        getNewPiece();
-        if (!board.isValidBlock(currentPiece, 0, 0)) {
-            isGameOver = true;
-            timer.stop();
+        state.setCurrentPiece(pieceQueue.getNextPiece());
+        if (!state.getBoard().isValidBlock(state.getCurrentPiece(), 0, 0)) {
+            state.setGameOver(true);
+            gameLoopController.stop();
             soundManager.stopBGM();
-            // Call notifyView one last time before stopping completely
             notifyView();
         }
     }
 
-    // new method to do only job: create new Piece
     private Tetromino createNextPiece() {
         int shapeType = random.nextInt(7);
         if (shapeType == 0) {
@@ -95,35 +83,14 @@ public class GameEngine {
         }
     }
 
-    // fill the queue when needed
-    private void addPieceToQueue() {
-        while (queuePiece.size() < NEXT_PIECE_COUNT) {
-            queuePiece.add(createNextPiece());
-        }
-    }
-
-    // get new piece for currentPiece
-    private void getNewPiece() {
-        currentPiece = queuePiece.remove();
-        addPieceToQueue();
-    }
-
     public Queue<Tetromino> getUpcomingPieces() {
-        return queuePiece;
-    }
-
-    private void movePieceDown() {
-        if (board.isValidBlock(currentPiece, 0, 1)) {
-            currentPiece.move(0, 1);
-        } else {
-            lockCurrentPieceAndContinue();
-        }
+        return pieceQueue.getUpcomingPieces();
     }
 
     private void lockCurrentPieceAndContinue() {
-        board.lockPiece(currentPiece);
-        int linesCleared = board.clearLines();
-        score += calculateScore(linesCleared);
+        state.getBoard().lockPiece(state.getCurrentPiece());
+        int linesCleared = state.getBoard().clearLines();
+        state.addScore(scoreManager.calculateScore(linesCleared));
 
         if (linesCleared > 0) {
             soundManager.playSFX("/sounds/clear.wav");
@@ -132,122 +99,68 @@ public class GameEngine {
         spawnNewPiece();
     }
 
-    private int calculateScore(int linesCleared) {
-        int baseScore = 0;
-        switch (linesCleared) {
-            case 1:
-                baseScore = 100;
-                break;
-            case 2:
-                baseScore = 300;
-                break;
-            case 3:
-                baseScore = 500;
-                break;
-            case 4:
-                baseScore = 800;
-                break;
-            default:
-                baseScore = 0;
-                break;
-        }
-        return baseScore * scoreMultiplier;
-    }
-
     public void moveLeft() {
-        if (!isGameOver && !isPaused && currentPiece != null && board.isValidBlock(currentPiece, -1, 0)) {
-            currentPiece.move(-1, 0);
-            notifyView();
-        }
+        movementController.moveLeft();
+        notifyView();
     }
 
     public void moveRight() {
-        if (!isGameOver && !isPaused && currentPiece != null && board.isValidBlock(currentPiece, 1, 0)) {
-            currentPiece.move(1, 0);
-            notifyView();
-        }
+        movementController.moveRight();
+        notifyView();
     }
 
     public void softDrop() {
-        if (!isGameOver && !isPaused && currentPiece != null) {
-            movePieceDown();
-            notifyView();
-        }
+        movementController.moveDown();
+        notifyView();
     }
 
     public void hardDrop() {
-        if (isGameOver || isPaused || currentPiece == null)
-            return;
-
-        while (board.isValidBlock(currentPiece, 0, 1)) {
-            currentPiece.move(0, 1);
-        }
-        lockCurrentPieceAndContinue();
+        movementController.hardDrop();
         notifyView();
     }
 
     public void rotateCurrentPiece() {
-        if (isGameOver || isPaused || currentPiece == null)
-            return;
-
-        currentPiece.rotate();
-
-        if (board.isValidBlock(currentPiece, 0, 0)) {
-        } else if (board.isValidBlock(currentPiece, -1, 0)) {
-            currentPiece.move(-1, 0);
-        } else if (board.isValidBlock(currentPiece, 1, 0)) {
-            currentPiece.move(1, 0);
-        } else if (board.isValidBlock(currentPiece, -2, 0)) {
-            currentPiece.move(-2, 0);
-        } else if (board.isValidBlock(currentPiece, 2, 0)) {
-            currentPiece.move(2, 0);
-        } else if (board.isValidBlock(currentPiece, 0, -1)) {
-            currentPiece.move(0, -1);
-        } else {
-            currentPiece.rotateBack();
-        }
+        movementController.rotateCurrentPiece();
         notifyView();
     }
 
     public void togglePause() {
-        if (isGameOver)
+        if (state.isGameOver())
             return;
-        isPaused = !isPaused;
+        state.togglePaused();
     }
 
     public void start() {
-        if (!timer.isRunning()) {
-            timer.start();
-        }
+        gameLoopController.start();
     }
 
     public void stop() {
-        timer.stop();
+        gameLoopController.stop();
     }
 
     public Board getBoard() {
-        return board;
+        return state.getBoard();
     }
 
     public Tetromino getCurrentPiece() {
-        return currentPiece;
+        return state.getCurrentPiece();
     }
 
     public int getScore() {
-        return score;
+        return state.getScore();
     }
 
     public boolean isGameOver() {
-        return isGameOver;
+        return state.isGameOver();
     }
 
     public boolean isPaused() {
-        return isPaused;
+        return state.isPaused();
     }
 
     public void setDifficultyDelay(int ms, int multiplier) {
-        this.timer.setDelay(ms);
-        this.scoreMultiplier = multiplier;
+        this.gameLoopController.setDelay(ms);
+        this.scoreManager.setMultiplier(multiplier);
     }
 
     public SoundController getSoundManager() {
