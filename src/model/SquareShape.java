@@ -4,17 +4,19 @@ import java.awt.Color;
 
 public class SquareShape extends Tetromino {
     public SquareShape(int startX, int startY) {
-        this.pieceColor = Color.GREEN;
+        Color color = Color.GREEN;
         
-        cells[0] = new Cell(startX, startY, pieceColor);
-        cells[1] = new Cell(startX + 1, startY, pieceColor);
-        cells[2] = new Cell(startX, startY + 1, pieceColor);
-        cells[3] = new Cell(startX + 1, startY + 1, pieceColor);
+        initCells(
+            new Cell(startX, startY, color),
+            new Cell(startX + 1, startY, color),
+            new Cell(startX, startY + 1, color),
+            new Cell(startX + 1, startY + 1, color)
+        );
     }
 
     @Override
-    public void rotate() {};
+    public void rotate() {}
 
     @Override
-    public void rotateBack() {};
+    public void rotateBack() {}
 }

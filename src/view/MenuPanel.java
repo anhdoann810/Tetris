@@ -1,12 +1,12 @@
 package view;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
-import java.io.IOException;
 import controller.GameEngine;
 import controller.SoundController;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+import javax.swing.*;
 
 public class MenuPanel extends JPanel {
     private BufferedImage bgImage;
@@ -37,12 +37,12 @@ public class MenuPanel extends JPanel {
         JButton exitButton = new JButton("EXIT GAME");
         exitButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JButton bgmToggleButton = new JButton("\uD83D\uDD0A BGM");
+        JButton bgmToggleButton = new JButton("\uD83D\uDD0A Music");
         bgmToggleButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         bgmToggleButton.addActionListener(e -> {
             SoundController sm = gameEngine.getSoundManager();
             sm.toggleBGM();
-            bgmToggleButton.setText(sm.isBgmMuted() ? "\uD83D\uDD07 BGM" : "\uD83D\uDD0A BGM");
+            bgmToggleButton.setText(sm.isBgmMuted() ? "\uD83D\uDD07 Music" : "\uD83D\uDD0A Music");
         });
 
         startButton.addActionListener(e -> {

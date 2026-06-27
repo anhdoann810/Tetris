@@ -16,15 +16,15 @@ public class Cell {
     public int getx() { 
         return x; 
     }
-    public void setx(int x) {
-        this.x = x;
-    }
     public int gety() {
         return y;
     }
-    public void sety(int y) {
-        this.y = y;
+
+    protected void move(int dx, int dy) {
+        this.x += dx;
+        this.y += dy;
     }
+
     public Color getColor() {
         return color;
     }

@@ -23,22 +23,19 @@ public class HelpPanel extends JPanel {
 
         setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
 
-        JLabel title = new JLabel("HOW TO PLAY", SwingConstants.CENTER);
-        title.setFont(new Font("Futura Black", Font.BOLD, 35));
-        title.setForeground(Color.WHITE);
-
         JLabel instructions = new JLabel(
-                "<html><div style='text-align: center; font-family: Arial; font-size: 16px;'>"
-                        + "<br><br>"
-                        + "<b>LEFT / RIGHT ARROWS:</b> Move piece horizontally<br><br>"
-                        + "<b>UP ARROW:</b> Rotate piece clockwise<br><br>"
-                        + "<b>DOWN ARROW:</b> Soft Drop (move down faster)<br><br>"
-                        + "<b>SPACEBAR:</b> Hard Drop (instant lock)<br><br>"
-                        + "<br>Clear horizontal lines to score points!<br>"
-                        + "The game ends if the pieces reach the top."
-                        + "</div></html>",
-                SwingConstants.CENTER);
-        instructions.setForeground(Color.WHITE);
+        "<html><div style='text-align: center; font-family: Arial; font-size: 14px; color: white;'>"
+                + "<b>Welcome to our OOP Tetris project!</b><br><br>"
+                + "<b>This game was built as an academic project to explore and apply OOP principles in a fully functional, real-time software application.</b><br><br>"
+                + "<b>HOW TO PLAY</b><br><br>"
+                + "<b>LEFT / RIGHT ARROWS:</b> Move piece horizontally<br><br>"
+                + "<b>UP ARROW:</b> Rotate piece clockwise<br><br>"
+                + "<b>DOWN ARROW:</b> Soft Drop (move down faster)<br><br>"
+                + "<b>SPACEBAR:</b> Hard Drop (instant lock)<br><br>"
+                + "<br>Clear horizontal lines to score points!<br>"
+                + "The game ends if the pieces reach the top."
+                + "</div></html>",
+        SwingConstants.CENTER);
 
         JButton backButton = new JButton("BACK TO MENU");
         backButton.setFont(new Font("Arial", Font.BOLD, 16));
@@ -46,7 +43,6 @@ public class HelpPanel extends JPanel {
 
         backButton.addActionListener(e -> layout.show(parentContainer, "Menu"));
 
-        add(title, BorderLayout.NORTH);
         add(instructions, BorderLayout.CENTER);
         add(backButton, BorderLayout.SOUTH);
     }

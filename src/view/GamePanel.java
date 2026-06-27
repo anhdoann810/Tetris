@@ -1,21 +1,20 @@
 package view;
 
-import model.Board;
-import model.Tetromino;
-import model.Cell;
-import javax.swing.JPanel;
-import javax.swing.JButton;
+import controller.SoundController;
+import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
 import javax.swing.InputMap;
-import javax.swing.KeyStroke;
-import javax.swing.AbstractAction;
-import java.awt.event.ActionEvent;
-import java.awt.CardLayout;
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import controller.SoundController;
+import javax.swing.JPanel;
+import javax.swing.KeyStroke;
+import model.Board;
+import model.Cell;
+import model.Tetromino;
 
 public class GamePanel extends JPanel {
     private final int CELL_SIZE = 30;
@@ -25,16 +24,22 @@ public class GamePanel extends JPanel {
     private JPanel parentContainer;
     private CardLayout layout;
     private JButton bgmToggleButton;
+    private JButton backButton;
 
     public GamePanel(Board gameBoard) {
         this.gameBoard = gameBoard;
         this.setBackground(Color.BLACK);
         this.setLayout(null); // allow absolute positioning for the button
 
-        bgmToggleButton = new JButton("\uD83D\uDD0A BGM");
+        bgmToggleButton = new JButton("\uD83D\uDD0A Music");
         bgmToggleButton.setBounds(Board.COLS * CELL_SIZE + 20, 500, 120, 35);
         bgmToggleButton.setFocusable(false);
         this.add(bgmToggleButton);
+
+        backButton = new JButton("\u2190 Menu");
+        backButton.setBounds(Board.COLS * CELL_SIZE + 20, 545, 120, 35);
+        backButton.setFocusable(false);
+        this.add(backButton);
 
         setupKeyBindings();
     }
@@ -47,7 +52,23 @@ public class GamePanel extends JPanel {
         bgmToggleButton.addActionListener(e -> {
             SoundController sm = engine.getSoundManager();
             sm.toggleBGM();
-            bgmToggleButton.setText(sm.isBgmMuted() ? "\uD83D\uDD07 BGM" : "\uD83D\uDD0A BGM");
+            bgmToggleButton.setText(sm.isBgmMuted() ? "\uD83D\uDD07 Music" : "\uD83D\uDD0A Music");
+        });
+
+        backButton.addActionListener(e -> {
+            engine.togglePause();
+            int choice = JOptionPane.showConfirmDialog(
+                    GamePanel.this,
+                    "Do you want to return to the Main Menu?",
+                    "Paused",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE);
+            if (choice == JOptionPane.YES_OPTION) {
+                engine.stop();
+                layout.show(parentContainer, Constants.SCREEN_MENU);
+            } else {
+                engine.togglePause();
+            }
         });
     }
 
